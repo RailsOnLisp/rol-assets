@@ -56,7 +56,8 @@
 
 (defvar *assets-dirs*
   '("lib/*/triangle/assets/*/"
-    "app/assets/*/"))
+    "app/assets/*/"
+    "assets/*/"))
 
 (defvar *precompiled-assets*
   '("all.css"
