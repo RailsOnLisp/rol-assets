@@ -19,19 +19,27 @@
 (in-package :cl-user)
 
 (defpackage :lowh.triangle.assets
-  (:nicknames :L.>.assets)
-  (:use :cl :alexandria :lowh.triangle.files)
+  (:nicknames :L>assets)
+  (:use :cl :alexandria :L>files)
   (:export
    ;;  Config
+   #:*debug*
+   #:*asset-url-prefix*
+   #:*asset-path-prefix*
    #:*assets-dirs* #:assets-dir
    #:*precompiled-assets* #:precompiled-asset
+   ;;  Strings
+   #:str
    ;;  Observers
-   #:asset-path
+   #:asset-path #:asset-url
    #:assets-dirs
+   #:find-asset #:find-assets-from-spec #:find-assets-from-specs
+   #:locate-precompiled-assets
    ;;  Precompile
    #:debug-msg
    #:msg
    #:with-msg-indent
+   #:compile-asset
    #:precompile
    #:generator
    #:generate))

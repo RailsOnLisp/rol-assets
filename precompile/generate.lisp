@@ -40,4 +40,5 @@
 (defun generate ()
   (msg "Generate")
   (with-msg-indent (1)
+    (mapc #'generate/file (directory "lib/triangle/*/triangle/assets.lisp"))
     (mapc #'generate/file (directory "lib/*/triangle/assets.lisp"))))

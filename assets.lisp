@@ -45,6 +45,7 @@
 	     (null "")
 	     (symbol (str (string-downcase (symbol-name obj))))
 	     (string obj)
+	     (pathname (format nil "~A" obj))
 	     (t (string obj)))))
 	(t
 	 (apply #'concatenate 'string
@@ -54,14 +55,18 @@
 
 (defvar *debug* nil)
 
-(defvar *assets-dirs*
+(defvar *default-assets-dirs*
   '("lib/*/triangle/assets/*/"
+    "lib/triangle/*/triangle/assets/*/"
     "app/assets/*/"
     "assets/*/"))
 
-(defvar *precompiled-assets*
-  '("all.css"
-    "all.js"
+(defparameter *assets-dirs*
+  *default-assets-dirs*)
+
+(defvar *default-precompiled-assets*
+  '("app.css"
+    "app.js"
     "**/*.jpeg"
     "**/*.jpg"
     "**/*.png"
@@ -69,6 +74,15 @@
     "**/*.eot"
     "**/*.ttf"
     "**/*.woff"))
+
+(defparameter *precompiled-assets*
+  *default-precompiled-assets*)
+
+(defvar *asset-url-prefix* "/assets/")
+
+(defvar *asset-path-prefix* "public/assets/")
+
+;;  Config stanzas
 
 (defun assets-dir (pathspec)
   (let* ((namestring (enough-namestring pathspec))
@@ -79,6 +93,8 @@
 
 (defun precompiled-asset (asset-name)
   (pushnew asset-name *precompiled-assets* :test #'string=))
+
+;;  Read config
 
 (defun assets-dirs ()
   (cache-1 (eq *assets-dirs*)
@@ -106,18 +122,23 @@
   (declare (type asset asset))
   (let ((name (asset-name asset))
 	(ext (asset-ext asset)))
-    (str "/assets/" name (when ext ".") ext)))
+    (str *asset-url-prefix* name (when ext ".") ext)))
 
 (defun asset-path (asset)
   (declare (type asset asset))
   (let ((name (asset-name asset))
 	(ext (asset-ext asset)))
-    (str "public/assets/" name (when ext ".") ext)))
+    (str *asset-path-prefix* name (when ext ".") ext)))
 
 (defun asset-source-path (asset)
   (declare (type asset asset))
   (with-slots (name source-dir source-ext) asset
     (str source-dir name (when source-ext ".") source-ext)))
+
+(defun asset-debug-path (asset)
+  (declare (type asset asset))
+  (with-slots (name source-dir source-ext) asset
+    (str source-dir name ".debug" (when source-ext ".") source-ext)))
 
 (defmethod print-object ((asset asset) stream)
   (print-unreadable-object (asset stream :type t)

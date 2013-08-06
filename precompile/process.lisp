@@ -18,7 +18,9 @@
 
 (in-package :lowh.triangle.assets)
 
-(defgeneric process-asset (asset output included-p))
+(defgeneric process-asset (asset output))
+
+(defgeneric include-asset (asset output))
 
 ;;  CSS
 
@@ -70,26 +72,43 @@ try {
     (exec-js:from-string js :safely nil :out out)))
 
 (defmethod process-asset ((asset css-asset)
-			  (output stream)
-			  included-p)
+			  (output stream))
   (let ((true-assets-dirs (cache-1 (eq *assets-dirs*)
 			    (mapcar #'truename (assets-dirs))))
 	(path (asset-source-path asset)))
     (less path
 	  (list :paths true-assets-dirs	:filename path)
-	  (list :yuicompress t)
+	  (list :yuicompress (not *debug*))
 	  output))
   (values))
+
+(defmethod include-asset ((asset css-asset)
+			  (output stream))
+  (format output "@import url('~A');~%" (asset-url asset)))
 
 ;;  JS
 
 (defmethod process-asset ((asset js-asset)
-			  (output stream)
-			  included-p)
-  (write-string (with-input-from-file/utf-8 (js (asset-source-path asset))
-		  (cl-uglify-js:ast-gen-code (cl-uglify-js:ast-mangle
-					      (cl-uglify-js:ast-squeeze
-					       (parse-js:parse-js js)))
-					     :beautify nil))
-		output)
+			  (output stream))
+  (with-input-from-file/utf-8 (js (asset-source-path asset))
+    (if (find :js *debug*)
+	(progn (copy-stream js output)
+	       (terpri output))
+	(write-string (cl-uglify-js:ast-gen-code (cl-uglify-js:ast-mangle
+						  (cl-uglify-js:ast-squeeze
+						   (parse-js:parse-js js)))
+						 :beautify nil)
+		      output)))
   (values))
+
+(defmethod include-asset ((asset js-asset)
+			  (output stream))
+  (format output "(function () {
+  var head = document.getElementsByTagName('head')[0];
+  var s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.src = ~S;
+  head.appendChild(s);
+})();
+"
+	  (asset-url asset)))

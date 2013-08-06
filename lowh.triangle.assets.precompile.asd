@@ -31,7 +31,8 @@
 	       "cl-uglify-js"
 	       "closer-mop"
 	       "exec-js"
-	       "lowh.triangle.assets")
+	       "lowh.triangle.assets"
+	       "lowh.triangle.files")
   :components
   ((:module "precompile"
 	    :components

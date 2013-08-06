@@ -1,6 +1,5 @@
 ;;
 ;;  Assets  -  Asset pipeline
-;;  Assets  -  Asset pipeline
 ;;
 ;;  Copyright 2012 Thomas de Grivel <billitch@gmail.com>
 ;;
@@ -28,12 +27,12 @@
 	  :initial-value assets))
 
 (defun preprocess/comment (asset comment assets)
-  (debug-msg "Comment ~S" comment)
+  #+nil(debug-msg "Comment ~S" comment)
   (or (cl-ppcre:register-groups-bind (command arguments)
 	  ("^\\W*=\\s*(\\w+)(\\s+\\S+)*\\s*$" comment)
 	(let ((arg-list (rest (cl-ppcre:split "\\s+" arguments))))
 	  (cond ((string= "require" command)
-		 (preprocess/require asset arg-list assets))
+		 (setf assets (preprocess/require asset arg-list assets)))
 		(t
 		 (warn "Unknown preprocessor command : ~A ~S"
 		       command arg-list)
@@ -48,8 +47,7 @@
     t))
 
 (defun preprocess/stream (asset stream assets &optional stack)
-  (let ((assets assets)
-	(line (read-line stream nil))
+  (let ((line (read-line stream nil))
 	start comment end)
     (or (when line
 	  (cl-ppcre:register-groups-bind (s c e)
@@ -74,10 +72,10 @@
 
 (defun preprocess/asset (asset assets)
   (let ((path (asset-source-path asset)))
-    (msg "~A" path)
+    (msg "PP ~A" path)
     (with-msg-indent (1)
       (with-input-from-file/utf-8 (input path)
 	(preprocess/stream asset input assets)))))
 
-(defun preprocess-asset (asset &optional assets)
-  (preprocess/asset asset assets))
+(defun preprocess-asset (asset)
+  (nreverse (preprocess/asset asset nil)))

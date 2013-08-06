@@ -44,12 +44,15 @@
 			(name string)
 			(ext symbol)
 			assets)
-  (let ((absolute-dir (merge-pathnames dir))
+  (let ((absolute-dir (truename dir))
 	(assets assets))
-    (dolist (path (directory (str dir name (when ext ".") ext)
-			     :resolve-symlinks nil))
-      (let ((name (enough-namestring (make-pathname :type nil :defaults path)
-				     absolute-dir)))
+    (dolist (path (directory (str dir name (when ext ".") ext)))
+      (let* ((name.ext (enough-namestring (truename path) absolute-dir))
+	     (name (if ext
+		       (subseq name.ext 0 (- (length name.ext)
+					     (length (string ext))
+					     1))
+		       name.ext)))
 	(unless (find-in-assets type dir name ext assets)
 	  (push (make-instance type
 			       :name name
@@ -115,12 +118,20 @@
        ,@body)))
 
 (defun find-assets-from-spec (spec &optional class assets)
-  (with-asset-spec spec (name ext)
-    (find-assets (or class (extension-asset-class ext))
-		 nil name nil assets)))
+  (let ((new-assets (if class
+			(find-assets class nil spec nil assets)
+			assets)))
+    (if (eq assets new-assets)
+	(with-asset-spec spec (name ext)
+	  (find-assets (or class (extension-asset-class ext))
+		       nil name nil assets))
+	new-assets)))
 
 (defun find-assets-from-specs (specs &optional class assets)
   (reduce (lambda (assets spec)
 	    (find-assets-from-spec spec class assets))
 	  specs
 	  :initial-value assets))
+
+(defun find-asset (spec &optional class)
+  (first (find-assets-from-spec spec class)))

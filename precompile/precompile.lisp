@@ -25,7 +25,7 @@
 (defmethod compile-asset ((asset asset) (output pathname))
   (ensure-directories-exist output)
   (let ((path (asset-source-path asset)))
-    (msg "~A" path)
+    (msg "CP ~A" path)
     (copy-files path output :replace t :update t)
     nil))
 
@@ -38,8 +38,18 @@
 					  output))
 		    assets))
       (with-output-to-file/utf-8 (out output)
-	(dolist (a assets)
-	  (process-asset a out (not (eq asset a))))))))
+	(cond
+	  ((find :assets *debug*)
+	   (dolist (a assets)
+	     (msg "P ~A" (asset-source-path a))
+	     (if (eq asset a)
+		 (process-asset a out)
+		 (progn (include-asset a out)
+			(copy-files (asset-source-path a)
+				    (asset-path a))))))
+	  (t (dolist (a assets)
+	       (msg "P ~A" (asset-source-path a))
+	       (process-asset a out))))))))
 
 ;;  Precompile
 
