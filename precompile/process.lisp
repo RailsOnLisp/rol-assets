@@ -88,17 +88,23 @@ try {
 
 ;;  JS
 
+(defun jsmin (in out)
+  (let ((err (make-string-output-stream)))
+    (unwind-protect
+	 (sb-ext:run-program "jsmin" '()
+			     :input in
+			     :output out
+			     :error err
+			     :search t)
+      (close err))))
+
 (defmethod process-asset ((asset js-asset)
 			  (output stream))
   (with-input-from-file/utf-8 (js (asset-source-path asset))
     (if (find :js *debug*)
-	(progn (copy-stream js output)
-	       (terpri output))
-	(write-string (cl-uglify-js:ast-gen-code (cl-uglify-js:ast-mangle
-						  (cl-uglify-js:ast-squeeze
-						   (parse-js:parse-js js)))
-						 :beautify nil)
-		      output)))
+	(copy-stream js output)
+	(jsmin js output)))
+  (force-output output)
   (values))
 
 (defmethod include-asset ((asset js-asset)
