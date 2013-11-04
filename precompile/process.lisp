@@ -109,12 +109,4 @@ try {
 
 (defmethod include-asset ((asset js-asset)
 			  (output stream))
-  (format output "(function () {
-  var head = document.getElementsByTagName('head')[0];
-  var s = document.createElement('script');
-  s.type = 'text/javascript';
-  s.src = ~S;
-  head.appendChild(s);
-})();
-"
-	  (asset-url asset)))
+  (format output "triangle_include(~S);~%" (asset-url asset)))
