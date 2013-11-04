@@ -36,21 +36,6 @@
 	       (setf (car ,cache) ,key
 		     (cdr ,cache) (progn ,@body))))))))
 
-(defun str (&rest objects)
-  (cond ((endp objects)
-	 (str ""))
-	((= 1 (length objects))
-	 (let ((obj (first objects)))
-	   (typecase obj
-	     (null "")
-	     (symbol (str (string-downcase (symbol-name obj))))
-	     (string obj)
-	     (pathname (format nil "~A" obj))
-	     (t (string obj)))))
-	(t
-	 (apply #'concatenate 'string
-		(mapcar 'str objects)))))
-
 ;;  Config
 
 (defvar *debug* nil)

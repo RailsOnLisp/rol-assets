@@ -24,7 +24,8 @@
   :description "Asset pipeline"
   :depends-on ("alexandria"
 	       "cl-fad"
-	       "lowh.triangle.files")
+	       "lowh.triangle.files"
+	       "lowh.triangle.uri")
   :components
   ((:file "package")
    (:file "extensions" :depends-on ("package"))

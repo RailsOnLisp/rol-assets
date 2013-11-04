@@ -20,7 +20,7 @@
 
 (defpackage :lowh.triangle.assets
   (:nicknames :L>assets)
-  (:use :cl :alexandria :L>files)
+  (:use :cl :alexandria :L>files :L>uri)
   (:export
    ;;  Config
    #:*debug*
@@ -28,8 +28,6 @@
    #:*asset-path-prefix*
    #:*assets-dirs* #:assets-dir
    #:*precompiled-assets* #:precompiled-asset
-   ;;  Strings
-   #:str
    ;;  Observers
    #:asset-path #:asset-url
    #:assets-dirs
