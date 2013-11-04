@@ -29,5 +29,5 @@
   :components
   ((:file "package")
    (:file "extensions" :depends-on ("package"))
-   (:file "assets" :depends-on ("extensions"))
-   (:file "find" :depends-on ("assets"))))
+   (:file "assets"     :depends-on ("extensions"))
+   (:file "find"       :depends-on ("assets"))))
