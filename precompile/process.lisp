@@ -75,7 +75,7 @@ try {
 			  (output stream))
   (let ((true-assets-dirs (cache-1 (eq *assets-dirs*)
 			    (mapcar #'truename (assets-dirs))))
-	(path (asset-source-path asset)))
+	(path (truename (asset-source-path asset))))
     (less path
 	  (list :paths true-assets-dirs	:filename path)
 	  (list :yuicompress (not *debug*))
