@@ -22,12 +22,19 @@
 
 (defgeneric compile-asset (asset output))
 
+(defmethod compile-asset ((asset asset) (output stream))
+  (let ((path (asset-source-path asset)))
+    (msg "CP ~A" path)
+    (with-open-file (in path :element-type '(unsigned-byte 8))
+      (copy-stream in output)))
+  nil)
+
 (defmethod compile-asset ((asset asset) (output pathname))
   (ensure-directories-exist output)
   (let ((path (asset-source-path asset)))
     (msg "CP ~A" path)
-    (copy-files path output :replace t :update t)
-    nil))
+    (copy-files path output :replace t :update t))
+  nil)
 
 (defmethod compile-asset ((asset preprocessed-asset) (output stream))
   (let ((assets (preprocess-asset asset)))
