@@ -130,6 +130,8 @@
     (ignore-errors (format stream "~S" (asset-path asset)))
     (ignore-errors (format stream " ~S" (asset-source-path asset)))))
 
+(defgeneric asset-html-include (type name))
+
 ;;  Asset class -> extensions
 
 #+nil
@@ -176,6 +178,9 @@
 (defmethod asset-class-extensions ((class (eql 'css-asset)))
   (extensions #:css #:less))
 
+(defmethod asset-html-include ((type (eql :css)) name)
+  (format nil "<link rel=\"stylesheet\" href=\"/assets/~A.css\" type=\"text/css\" />" name))
+
 ;;    JS
 
 (defclass js-asset (preprocessed-asset) ())
@@ -185,3 +190,6 @@
 
 (defmethod asset-class-extensions ((class (eql 'js-asset)))
   (extensions #:js))
+
+(defmethod asset-html-include ((type (eql :js)) name)
+  (format nil "<script src=\"/assets/~A.js\" type=\"text/javascript\"></script>" name))

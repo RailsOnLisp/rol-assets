@@ -33,6 +33,8 @@
    #:assets-dirs
    #:find-asset #:find-assets-from-spec #:find-assets-from-specs
    #:locate-precompiled-assets
+   ;;  Rendering
+   #:asset-html-include
    ;;  Precompile
    #:debug-msg
    #:msg
