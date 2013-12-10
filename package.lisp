@@ -48,7 +48,7 @@
    ;;  Rendering
    #:process-asset
    #:preprocess-asset
-   #:asset-html-include
+   #:asset-include
    ;;  Precompile
    #:debug-msg
    #:msg

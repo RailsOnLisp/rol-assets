@@ -28,11 +28,15 @@
 (defmethod asset-class-extensions ((class (eql 'css-asset)))
   (extensions #:css #:less))
 
-(defmethod asset-include ((context (eql :html))
+(defmethod asset-include ((output stream)
+			  (context (eql :html))
 			  (asset css-asset)
-			  &rest )
-  (format nil "<link rel=\"stylesheet\" href=\"~A\" type=\"text/css\" />"
-	  (asset-url asset)))
+			  &key &allow-other-keys)
+  (write-string "<link rel=\"stylesheet\" href=\"" output)
+  (write-string (quote-html (asset-url asset)) output)
+  (write-string "\" type=\"text/css\" />
+" output)
+  (values))
 
 ;;  Compile
 

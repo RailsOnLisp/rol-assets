@@ -31,6 +31,7 @@
 	       "lowh.triangle.uri")
   :components
   ((:file "package")
+   (:file "html"       :depends-on ("package"))
    (:file "config"     :depends-on ("package"))
    (:file "lib"        :depends-on ("package"))
    (:file "extensions" :depends-on ("package"))
@@ -38,6 +39,6 @@
    (:file "find"       :depends-on ("asset"))
    (:file "font"       :depends-on ("asset"))
    (:file "preprocess" :depends-on ("find"))
-   (:file "css"        :depends-on ("preprocess"))
-   (:file "image"      :depends-on ("preprocess"))
-   (:file "js"         :depends-on ("preprocess"))))
+   (:file "css"        :depends-on ("preprocess" "html"))
+   (:file "image"      :depends-on ("preprocess" "html"))
+   (:file "js"         :depends-on ("preprocess" "html"))))

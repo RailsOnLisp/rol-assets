@@ -151,9 +151,11 @@
 (defmethod asset-source-path ((spec string))
   (asset-source-path (find-asset spec)))
 
-(defmethod asset-include (context (spec string)
-			  &rest params &key &allow-other-keys)
-  (apply #'asset-include context (find-asset spec) params))
+(defmethod asset-include (output
+			  context
+			  (spec string)
+			  &rest args &key &allow-other-keys)
+  (apply #'asset-include output context (find-asset spec) args))
 
 (defmethod compile-asset ((spec string) output)
   (compile-asset (find-asset spec) output))

@@ -28,9 +28,15 @@
 (defmethod asset-class-extensions ((class (eql 'js-asset)))
   (extensions #:js))
 
-(defmethod asset-html-include ((asset js-asset))
-  (format nil "<script src=\"~A\" type=\"text/javascript\"></script>"
-	  (asset-url asset)))
+(defmethod asset-include ((output stream)
+			  (context (eql :html))
+			  (asset js-asset)
+			  &key &allow-other-keys)
+  (write-string "<script src=\"" output)
+  (write-string (quote-html (asset-url asset)) output)
+  (write-string "\" type=\"text/javascript\"></script>
+" output)
+  (values))
 
 ;;  Compile
 
@@ -52,7 +58,3 @@
 	(jsmin js output)))
   (force-output output)
   (values))
-
-(defmethod include-asset ((asset js-asset)
-			  (output stream))
-  (format output "triangle_include(~S);~%" (asset-url asset)))

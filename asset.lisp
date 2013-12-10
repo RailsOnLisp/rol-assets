@@ -35,7 +35,7 @@
 (defgeneric asset-url (asset))
 (defgeneric asset-path (asset))
 (defgeneric asset-source-path (asset))
-(defgeneric asset-include (context asset &rest params &key &allow-other-keys))
+(defgeneric asset-include (output context asset &key &allow-other-keys))
 (defgeneric compile-asset (asset output))
 
 ;;  Base implementation
@@ -62,10 +62,6 @@
     (ignore-errors (format stream "~S" (asset-path asset)))
     (ignore-errors (format stream " ~S" (asset-source-path asset)))))
 
-(defmethod asset-include ((asset-spec string) &rest args &key &allow-other-keys)
-  (let ((asset (find-assets-from-spec asset-spec)))
-    (apply #'asset-html-include asset args)))
-
 (defmethod compile-asset ((asset asset) (output stream))
   (let ((path (asset-source-path asset)))
     (msg "CP ~A" path)
@@ -79,6 +75,13 @@
     (msg "CP ~A" path)
     (copy-files path output :replace t :update t))
   nil)
+
+(defmethod asset-include ((output null)
+			  context
+			  asset
+			  &rest args &key &allow-other-keys)
+  (with-output-to-string (stream)
+    (apply #'asset-include stream context asset args)))
 
 ;;  Asset class -> extensions
 

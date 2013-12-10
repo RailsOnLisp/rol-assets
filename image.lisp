@@ -25,8 +25,14 @@
 (defmethod asset-class-extensions ((class (eql 'image-asset)))
   (extensions #:gif #:ico #:jpeg #:jpg #:png #:svg #:svgz))
 
-(defmethod asset-html-include ((asset image-asset) &rest args
-			       &key alt &allow-other-keys)
-  (format nil "<img src=\"~A\" alt=\"~A\"></script>"
-	  (asset-url asset)
-	  (or alt "")))
+(defmethod asset-include ((output stream)
+			  (context (eql :html))
+			  (asset image-asset)
+			  &key alt &allow-other-keys)
+  (write-string "<img src=\"" output)
+  (write-string (quote-html (asset-url asset)) output)
+  (write-string "\" alt=\"" output)
+  (when alt (write-string (quote-html alt) output))
+  (write-string "\"/>
+" output)
+  (values))
