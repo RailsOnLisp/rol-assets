@@ -105,5 +105,5 @@
 		      (file-more-recent-p (asset-source-path asset)
 					  output))
 		    assets))
-      (with-output-to-file/utf-8 (out output)
-	(compile-asset asset out)))))
+      (with-output-to-file/utf-8 (stream output)
+	(compile-asset asset stream)))))

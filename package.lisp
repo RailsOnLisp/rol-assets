@@ -26,14 +26,28 @@
    #:*debug*
    #:*asset-url-prefix*
    #:*asset-path-prefix*
-   #:*assets-dirs* #:assets-dir
-   #:*precompiled-assets* #:precompiled-asset
+   #:*assets-dirs*
+   #:assets-dir
+   #:*precompiled-assets*
+   #:precompiled-asset
+   ;;  Classes
+   #:asset
+   #:font-asset
+   #:image-asset
+   #:preprocessed-asset
+   #:css-asset
+   #:js-asset
    ;;  Observers
-   #:asset-path #:asset-url
+   #:asset-path
+   #:asset-url
    #:assets-dirs
-   #:find-asset #:find-assets-from-spec #:find-assets-from-specs
+   #:find-asset
+   #:find-assets-from-spec
+   #:find-assets-from-specs
    #:locate-precompiled-assets
    ;;  Rendering
+   #:process-asset
+   #:preprocess-asset
    #:asset-html-include
    ;;  Precompile
    #:debug-msg
