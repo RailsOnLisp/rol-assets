@@ -1,5 +1,5 @@
 ;;
-;;  LowH Triangle Assets  -  Asset pipeline
+;;  Assets  -  Asset pipeline
 ;;
 ;;  Copyright 2012 Thomas de Grivel <billitch@gmail.com>
 ;;
@@ -18,18 +18,16 @@
 
 (in-package :lowh.triangle.assets)
 
-(defmethod json:encode-json ((object pathname) &optional stream)
-  (json:encode-json (format nil "~A" object) stream))
+;;  Precompile
 
-(defun extension-asset-class (extension
-			      &optional (class (find-class 'asset)))
-  (declare (type symbol extension)
-	   (type class class))
-  (when extension
-    (labels ((matching-asset-class (c)
-	       (or (when (find extension (asset-class-extensions c))
-		     c)
-		   (some #'matching-asset-class
-			 (closer-mop:class-direct-subclasses c)))))
-      (or (matching-asset-class class)
-	  class))))
+(defun locate-precompiled-assets ()
+  (find-assets-from-specs *precompiled-assets*))
+
+(defun precompile ()
+  (msg "Precompile")
+  (with-msg-indent (1)
+    (dolist (asset (locate-precompiled-assets))
+      (let ((output-path (asset-path asset)))
+	(msg "~A" output-path)
+	(with-msg-indent (1)
+	  (compile-asset asset (pathname output-path)))))))

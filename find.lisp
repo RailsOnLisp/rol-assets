@@ -135,3 +135,25 @@
 
 (defun find-asset (spec &optional class)
   (first (find-assets-from-spec spec class)))
+
+;;  Now that we can find an asset from a string spec we can also
+;;  add some sugar coating to asset methods.
+
+(defmethod asset-ext ((spec string))
+  (asset-ext (find-asset spec)))
+
+(defmethod asset-url ((spec string))
+  (asset-url (find-asset spec)))
+
+(defmethod asset-path ((spec string))
+  (asset-path (find-asset spec)))
+
+(defmethod asset-source-path ((spec string))
+  (asset-source-path (find-asset spec)))
+
+(defmethod asset-include (context (spec string)
+			  &rest params &key &allow-other-keys)
+  (apply #'asset-include context (find-asset spec) params))
+
+(defmethod compile-asset ((spec string) output)
+  (compile-asset (find-asset spec) output))

@@ -16,29 +16,11 @@
 ;;  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ;;
 
-(defpackage :lowh.triangle.assets.precompile.system
-  (:use :cl :asdf))
+(in-package :lowh.triangle.assets)
 
-(in-package :lowh.triangle.assets.precompile.system)
+;;  Font
 
-(asdf:defsystem :lowh.triangle.assets.precompile
-  :name "assets.precompile"
-  :author "Thomas de Grivel <billitch@gmail.com>"
-  :version "0.1"
-  :description "Precompile assets"
-  :depends-on ("alexandria"
-	       "cl-json"
-	       "cl-uglify-js"
-	       "closer-mop"
-	       "exec-js"
-	       "lowh.triangle.assets"
-	       "lowh.triangle.files")
-  :components
-  ((:module "precompile"
-	    :components
-	    ((:file "assets")
-	     (:file "msg")
-	     (:file "process" :depends-on ("msg"))
-	     (:file "preprocess" :depends-on ("process"))
-	     (:file "precompile" :depends-on ("assets" "preprocess"))
-	     (:file "generate" :depends-on ("msg"))))))
+(defclass font-asset (asset) ())
+
+(defmethod asset-class-extensions ((class (eql 'font-asset)))
+  (extensions #:eot #:ttf #:woff))

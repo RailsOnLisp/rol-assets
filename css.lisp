@@ -18,11 +18,26 @@
 
 (in-package :lowh.triangle.assets)
 
-(defgeneric process-asset (asset output))
-
-(defgeneric include-asset (asset output))
-
 ;;  CSS
+
+(defclass css-asset (preprocessed-asset) ())
+
+(defmethod asset-ext ((asset css-asset))
+  (extension #:css))
+
+(defmethod asset-class-extensions ((class (eql 'css-asset)))
+  (extensions #:css #:less))
+
+(defmethod asset-include ((context (eql :html))
+			  (asset css-asset)
+			  &rest )
+  (format nil "<link rel=\"stylesheet\" href=\"~A\" type=\"text/css\" />"
+	  (asset-url asset)))
+
+;;  Compile
+
+(defmethod json:encode-json ((object pathname) &optional stream)
+  (json:encode-json (namestring object) stream))
 
 (defun less (src-path parser-options css-options &optional out)
   (let* ((fmt "~
@@ -85,28 +100,3 @@ try {
 (defmethod include-asset ((asset css-asset)
 			  (output stream))
   (format output "@import url('~A');~%" (asset-url asset)))
-
-;;  JS
-
-(defun jsmin (in out)
-  (let ((err (make-string-output-stream)))
-    (unwind-protect
-	 (sb-ext:run-program "jsmin" '()
-			     :input in
-			     :output out
-			     :error err
-			     :search t)
-      (close err))))
-
-(defmethod process-asset ((asset js-asset)
-			  (output stream))
-  (with-input-from-file/utf-8 (js (asset-source-path asset))
-    (if (find :js *debug*)
-	(copy-stream js output)
-	(jsmin js output)))
-  (force-output output)
-  (values))
-
-(defmethod include-asset ((asset js-asset)
-			  (output stream))
-  (format output "triangle_include(~S);~%" (asset-url asset)))

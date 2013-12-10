@@ -24,10 +24,20 @@
   :description "Asset pipeline"
   :depends-on ("alexandria"
 	       "cl-fad"
+	       "closer-mop"
+	       "cl-json"
+	       "exec-js"
 	       "lowh.triangle.files"
 	       "lowh.triangle.uri")
   :components
   ((:file "package")
+   (:file "config"     :depends-on ("package"))
+   (:file "lib"        :depends-on ("package"))
    (:file "extensions" :depends-on ("package"))
-   (:file "assets"     :depends-on ("extensions"))
-   (:file "find"       :depends-on ("assets"))))
+   (:file "asset"      :depends-on ("extensions" "lib"))
+   (:file "find"       :depends-on ("asset"))
+   (:file "font"       :depends-on ("asset"))
+   (:file "preprocess" :depends-on ("find"))
+   (:file "css"        :depends-on ("preprocess"))
+   (:file "image"      :depends-on ("preprocess"))
+   (:file "js"         :depends-on ("preprocess"))))

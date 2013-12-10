@@ -18,22 +18,15 @@
 
 (in-package :lowh.triangle.assets)
 
-;;  Extensions package
+;;    Image
 
-(let ((assets.extensions (defpackage :assets.extensions)))
+(defclass image-asset (asset) ())
 
-  (do-symbols (sym assets.extensions)
-    (unintern sym assets.extensions))
+(defmethod asset-class-extensions ((class (eql 'image-asset)))
+  (extensions #:gif #:ico #:jpeg #:jpg #:png #:svg #:svgz))
 
-  (defun intern-extension (thing)
-    (when thing
-      (intern (string-upcase thing) assets.extensions))))
-
-(defmacro extension (thing)
-  (or `',(intern-extension thing)
-      `(intern-extension ,thing)))
-
-(defmacro extensions (&rest things)
-  `(list ,@(mapcar (lambda (thing)
-		     `(extension ,thing))
-		   things)))
+(defmethod asset-html-include ((asset image-asset) &rest args
+			       &key alt &allow-other-keys)
+  (format nil "<img src=\"~A\" alt=\"~A\"></script>"
+	  (asset-url asset)
+	  (or alt "")))

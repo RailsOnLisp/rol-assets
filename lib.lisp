@@ -18,6 +18,24 @@
 
 (in-package :lowh.triangle.assets)
 
+;;  Misc
+
+(defun empty-p (string)
+  (or (null string)
+      (not (cl-ppcre:scan "\\S" string))))
+
+(eval-when (:compile-toplevel :load-toplevel)
+  (let ((cache-nil (gensym "CACHE-NIL-")))
+
+    (defmacro cache-1 ((test key) &body body)
+      "Cache one value of BODY. TEST identifies KEY is cached."
+      (let ((cache (gensym "CACHE-")))
+	`(let ((,cache (load-time-value (cons ',cache-nil nil))))
+	   (if (,test (car ,cache) ,key)
+	       (cdr ,cache)
+	       (setf (car ,cache) ,key
+		     (cdr ,cache) (progn ,@body))))))))
+
 ;;  Log messages
 
 (defvar *msg-indent* 0)

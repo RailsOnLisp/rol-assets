@@ -18,7 +18,11 @@
 
 (in-package :lowh.triangle.assets)
 
-;;  Preprocess : asset -> list of assets to compile
+;;  Preprocessed assets
+
+(defclass preprocessed-asset (asset) ())
+
+;;  Preprocessing an asset gives a list of assets to compile.
 
 (defun preprocess/require (asset specs assets)
   (reduce (lambda (assets asset)
@@ -77,5 +81,29 @@
       (with-input-from-file/utf-8 (input path)
 	(preprocess/stream asset input assets)))))
 
-(defun preprocess-asset (asset)
+(defgeneric preprocess-asset (asset))
+
+(defmethod preprocess-asset ((asset asset))
   (nreverse (preprocess/asset asset nil)))
+
+(defmethod preprocess-asset ((spec string))
+  (preprocess-asset (find-asset spec)))
+
+;;  Compile preprocessed assets
+
+(defmethod compile-asset ((asset preprocessed-asset) (output stream))
+  (let ((assets (preprocess-asset asset)))
+    (dolist (a assets)
+      (msg "P ~A" (asset-source-path a))
+      (process-asset a output))))
+
+(defmethod compile-asset ((asset preprocessed-asset) (output pathname))
+  (ensure-directories-exist output)
+  (let ((assets (preprocess-asset asset)))
+    (when (or (not (file-exists-p output))
+	      (some (lambda (asset)
+		      (file-more-recent-p (asset-source-path asset)
+					  output))
+		    assets))
+      (with-output-to-file/utf-8 (out output)
+	(compile-asset asset out)))))
