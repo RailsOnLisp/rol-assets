@@ -35,7 +35,7 @@
    (:file "config"     :depends-on ("package"))
    (:file "lib"        :depends-on ("package"))
    (:file "extensions" :depends-on ("package"))
-   (:file "asset"      :depends-on ("extensions" "lib"))
+   (:file "asset"      :depends-on ("config" "extensions" "lib"))
    (:file "find"       :depends-on ("asset"))
    (:file "font"       :depends-on ("asset"))
    (:file "preprocess" :depends-on ("find"))

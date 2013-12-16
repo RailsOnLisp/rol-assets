@@ -24,8 +24,8 @@
   (:export
    ;;  Config
    #:*debug*
-   #:*asset-url-prefix*
-   #:*asset-path-prefix*
+   #:*assets-url-template*
+   #:*assets-path-template*
    #:*assets-dirs*
    #:assets-dir
    #:*precompiled-assets*

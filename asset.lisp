@@ -44,14 +44,14 @@
   (asset-source-ext asset))
 
 (defmethod asset-url ((asset asset))
-  (let ((name (asset-name asset))
-	(ext (asset-ext asset)))
-    (str *asset-url-prefix* name (when ext ".") ext)))
+  (expand-uri nil *assets-url-template*
+	      :name (asset-name asset)
+	      :ext (string-downcase (asset-ext asset))))
 
 (defmethod asset-path ((asset asset))
-  (let ((name (asset-name asset))
-	(ext (asset-ext asset)))
-    (str *asset-path-prefix* name (when ext ".") ext)))
+  (expand-uri nil *assets-path-template*
+	      :name (asset-name asset)
+	      :ext (string-downcase (asset-ext asset))))
 
 (defmethod asset-source-path ((asset asset))
   (with-slots (name source-dir source-ext) asset
