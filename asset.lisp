@@ -29,13 +29,18 @@
 	       :type string)
    (source-ext :initarg :source-ext
 	       :reader asset-source-ext
-	       :type keyword)))
+	       :type keyword)
+   (sources :initarg :sources
+	    :reader asset-sources
+	    :type list)))
 
 (defgeneric asset-ext (asset))
 (defgeneric asset-url (asset))
 (defgeneric asset-path (asset))
 (defgeneric asset-source-path (asset))
 (defgeneric asset-include (output context asset &key &allow-other-keys))
+
+(defgeneric asset-write-date (asset))
 (defgeneric compile-asset (asset output))
 
 ;;  Base implementation
@@ -61,6 +66,13 @@
   (print-unreadable-object (asset stream :type t)
     (ignore-errors (format stream "~S" (asset-path asset)))
     (ignore-errors (format stream " ~S" (asset-source-path asset)))))
+
+(defmethod slot-unbound (class (asset asset) (slot (eql 'sources)))
+  (setf (slot-value asset 'sources) (list asset)))
+
+(defmethod asset-write-date ((asset asset))
+  (loop for a in (asset-sources asset)
+     maximize (file-write-date (asset-source-path a))))
 
 (defmethod compile-asset ((asset asset) (output stream))
   (let ((path (asset-source-path asset)))

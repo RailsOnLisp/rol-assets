@@ -83,19 +83,21 @@
 
 (defgeneric preprocess-asset (asset))
 
-(defmethod preprocess-asset ((asset asset))
+(defmethod preprocess-asset ((asset preprocessed-asset))
   (nreverse (preprocess/asset asset nil)))
 
-(defmethod preprocess-asset ((spec string))
-  (preprocess-asset (find-asset spec)))
+(defmethod slot-unbound (class
+			 (asset preprocessed-asset)
+			 (slot (eql 'sources)))
+  (setf (slot-value asset 'sources) (preprocess-asset asset)))
 
 ;;  Compile preprocessed assets
 
 (defmethod compile-asset ((asset preprocessed-asset) (output stream))
   (let ((assets (preprocess-asset asset)))
-    (dolist (a assets)
-      (msg "P ~A" (asset-source-path a))
-      (process-asset a output))))
+    (loop for a in assets
+       do (msg "P ~A" (asset-source-path a))
+       do (process-asset a output))))
 
 (defmethod compile-asset ((asset preprocessed-asset) (output pathname))
   (ensure-directories-exist output)

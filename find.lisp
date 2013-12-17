@@ -148,8 +148,14 @@
 (defmethod asset-path ((spec string))
   (asset-path (find-asset spec)))
 
+(defmethod asset-write-date ((spec string))
+  (asset-write-date (find-asset spec)))
+
 (defmethod asset-source-path ((spec string))
   (asset-source-path (find-asset spec)))
+
+(defmethod asset-sources ((spec string))
+  (asset-sources (find-asset spec)))
 
 (defmethod asset-include (output
 			  context

@@ -40,6 +40,8 @@
    ;;  Observers
    #:asset-path
    #:asset-url
+   #:asset-sources
+   #:asset-write-date
    #:assets-dirs
    #:find-asset
    #:find-assets-from-spec
@@ -47,7 +49,6 @@
    #:locate-precompiled-assets
    ;;  Rendering
    #:process-asset
-   #:preprocess-asset
    #:asset-include
    ;;  Precompile
    #:debug-msg
