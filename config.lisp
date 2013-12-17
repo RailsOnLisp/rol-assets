@@ -26,6 +26,7 @@
   '("lib/*/triangle/assets/*/"
     "lib/triangle/*/triangle/assets/*/"
     "app/assets/*/"
+    "vendor/assets/*/"
     "assets/*/"))
 
 (defparameter *assets-dirs*
