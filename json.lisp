@@ -20,16 +20,10 @@
 
 ;;    JSON
 
-(defclass json-asset (js-asset) ())
+(defclass json-asset (asset) ())
 
 (defmethod asset-ext ((asset json-asset))
   '.json)
 
 (defmethod asset-class-extensions ((class (eql 'json-asset)))
   '(.json))
-
-(defmethod asset-include ((output stream)
-			  (context (eql :html))
-			  (asset json-asset)
-			  &key &allow-other-keys)
-  (error "Don't know how to include JSON in HTML."))
