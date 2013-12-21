@@ -18,9 +18,17 @@
 
 (in-package :cl-user)
 
+(defpackage :lowh.triangle.extensions
+  (:nicknames :L>ext)
+  #.(let (symbols)
+      (when (find-package :L>ext)
+	(do-external-symbols (s :L>ext)
+	  (push s symbols)))
+      `(:export ,@symbols)))
+
 (defpackage :lowh.triangle.assets
   (:nicknames :L>assets)
-  (:use :cl :alexandria :L>files :L>uri)
+  (:use :cl :alexandria :L>ext :L>files :L>uri)
   (:export
    ;;  Config
    #:*debug*
@@ -47,7 +55,9 @@
    #:find-assets-from-spec
    #:find-assets-from-specs
    #:locate-precompiled-assets
+   #:mime-type
    ;;  Rendering
+   #:quote-html
    #:process-asset
    #:asset-include
    ;;  Precompile

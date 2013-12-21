@@ -20,20 +20,17 @@
 
 ;;  Extensions package
 
-(let ((assets.extensions (defpackage :assets.extensions)))
+(defun intern-extension (name)
+  (let ((sym (intern (string-upcase (if (char= #\. (char name 0))
+					name
+					(concatenate 'string "." name)))
+		     :L>ext)))
+    (export sym :L>ext)
+    sym))
 
-  (do-symbols (sym assets.extensions)
-    (unintern sym assets.extensions))
+(defun extension-p (thing)
+  (and (symbolp thing)
+       (eq #.(find-package :L>ext) (symbol-package thing))))
 
-  (defun intern-extension (thing)
-    (when thing
-      (intern (string-upcase thing) assets.extensions))))
-
-(defmacro extension (thing)
-  (or `',(intern-extension thing)
-      `(intern-extension ,thing)))
-
-(defmacro extensions (&rest things)
-  `(list ,@(mapcar (lambda (thing)
-		     `(extension ,thing))
-		   things)))
+(deftype extension ()
+  `(and symbol (satisfies extension-p)))

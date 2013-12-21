@@ -23,10 +23,10 @@
 (defclass js-asset (preprocessed-asset) ())
 
 (defmethod asset-ext ((asset js-asset))
-  (extension #:js))
+  '.js)
 
 (defmethod asset-class-extensions ((class (eql 'js-asset)))
-  (extensions #:js))
+  '(.js))
 
 (defmethod asset-include ((output stream)
 			  (context (eql :html))

@@ -18,21 +18,18 @@
 
 (in-package :lowh.triangle.assets)
 
-;;    Image
+;;    JSON
 
-(defclass image-asset (asset) ())
+(defclass json-asset (js-asset) ())
 
-(defmethod asset-class-extensions ((class (eql 'image-asset)))
-  '(.gif .ico .jpeg .jpg .png .svg .svgz .wbmp))
+(defmethod asset-ext ((asset json-asset))
+  '.json)
+
+(defmethod asset-class-extensions ((class (eql 'json-asset)))
+  '(.json))
 
 (defmethod asset-include ((output stream)
 			  (context (eql :html))
-			  (asset image-asset)
-			  &key alt &allow-other-keys)
-  (write-string "<img src=\"" output)
-  (write-string (quote-html (asset-url asset)) output)
-  (write-string "\" alt=\"" output)
-  (when alt (write-string (quote-html alt) output))
-  (write-string "\"/>
-" output)
-  (values))
+			  (asset json-asset)
+			  &key &allow-other-keys)
+  (error "Don't know how to include JSON in HTML."))

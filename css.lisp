@@ -23,10 +23,10 @@
 (defclass css-asset (preprocessed-asset) ())
 
 (defmethod asset-ext ((asset css-asset))
-  (extension #:css))
+  '.css)
 
 (defmethod asset-class-extensions ((class (eql 'css-asset)))
-  (extensions #:css #:less))
+  '(.css .less))
 
 (defmethod asset-include ((output stream)
 			  (context (eql :html))

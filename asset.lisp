@@ -29,7 +29,7 @@
 	       :type string)
    (source-ext :initarg :source-ext
 	       :reader asset-source-ext
-	       :type keyword)
+	       :type extension)
    (sources :initarg :sources
 	    :reader asset-sources
 	    :type list)))
@@ -48,19 +48,22 @@
 (defmethod asset-ext ((asset asset))
   (asset-source-ext asset))
 
+(defmethod mime-type ((asset asset))
+  (mime-type (asset-ext asset)))
+
 (defmethod asset-url ((asset asset))
   (expand-uri nil *assets-url-template*
 	      :name (asset-name asset)
-	      :ext (string-downcase (asset-ext asset))))
+	      :ext (subseq (string-downcase (asset-ext asset)) 1)))
 
 (defmethod asset-path ((asset asset))
   (expand-uri nil *assets-path-template*
 	      :name (asset-name asset)
-	      :ext (string-downcase (asset-ext asset))))
+	      :ext (subseq (string-downcase (asset-ext asset)) 1)))
 
 (defmethod asset-source-path ((asset asset))
   (with-slots (name source-dir source-ext) asset
-    (str source-dir name (when source-ext ".") source-ext)))
+    (str source-dir name source-ext)))
 
 (defmethod print-object ((asset asset) stream)
   (print-unreadable-object (asset stream :type t)
@@ -112,7 +115,7 @@
 
 (defun extension-asset-class (extension
 			      &optional (class (find-class 'asset)))
-  (declare (type symbol extension)
+  (declare (type extension extension)
 	   (type class class))
   (when extension
     (labels ((matching-asset-class (c)

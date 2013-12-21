@@ -46,12 +46,11 @@
 			assets)
   (let ((absolute-dir (truename dir))
 	(assets assets))
-    (dolist (path (directory (str dir name (when ext ".") ext)))
+    (dolist (path (directory (str dir name ext)))
       (let* ((name.ext (enough-namestring (truename path) absolute-dir))
 	     (name (if ext
 		       (subseq name.ext 0 (- (length name.ext)
-					     (length (string ext))
-					     1))
+					     (length (string ext))))
 		       name.ext)))
 	(unless (find-in-assets type dir name ext assets)
 	  (push (make-instance type
@@ -79,7 +78,8 @@
 			(name string)
 			(ext null)
 			assets)
-  (find-assets type dir name (asset-class-extensions type) assets))
+  (when (setq ext (asset-class-extensions type))
+    (find-assets type dir name ext assets)))
 
 ;;    Loop through dirs
 
@@ -124,7 +124,10 @@
     (if (eq assets new-assets)
 	(with-asset-spec spec (name ext)
 	  (find-assets (or class (extension-asset-class ext))
-		       nil name nil assets))
+		       nil name ext assets)
+	  (when (eq assets new-assets)
+	    (find-assets (or class (extension-asset-class ext))
+			 nil name nil assets)))
 	new-assets)))
 
 (defun find-assets-from-specs (specs &optional class assets)
