@@ -38,6 +38,12 @@
    #:assets-dir
    #:*precompiled-assets*
    #:precompiled-asset
+   ;;  Extensions
+   #:extension
+   #:extension-p
+   #:intern-extension
+   ;;  MIME types
+   #:mime-type
    ;;  Classes
    #:asset
    #:font-asset
@@ -55,7 +61,6 @@
    #:find-assets-from-spec
    #:find-assets-from-specs
    #:locate-precompiled-assets
-   #:mime-type
    ;;  Rendering
    #:quote-html
    #:process-asset
