@@ -37,13 +37,14 @@
 ;;  Parser for mime.types file
 
 (defun read-mime.types (input)
-  (regex-lines "^\\s*([a-zA-Z0-9_.+-]+/[a-zA-Z0-9_.+-]+)(\\s+[a-zA-Z0-9]+)+\\s*;?"
+  (regex-lines "^\\s*([a-zA-Z0-9_.+-]+/[-a-zA-Z0-9_.+]+)\\s+([\\sa-zA-Z0-9]+)"
 	       input
 	       :match (lambda (match type extensions)
-			(declare (ignore match))
+			(declare (ignorable match))
 			(setq type (intern (string-upcase type) :keyword))
-			(dolist (ext (cdr (cl-ppcre:split "\\s+" extensions)))
-			  (setf (mime-type (intern-extension ext)) type)))))
+			(dolist (ext (cl-ppcre:split "\\s+" extensions))
+			  (unless (emptyp ext)
+			    (setf (mime-type (intern-extension ext)) type))))))
 
 (find-if (lambda (path)
 	   (when (probe-file path)
