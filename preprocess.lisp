@@ -76,7 +76,7 @@
 
 (defun preprocess/asset (asset assets)
   (let ((path (asset-source-path asset)))
-    (msg "PP ~A" path)
+    ;;(msg "PP ~A" path)
     (with-msg-indent (1)
       (with-input-from-file/utf-8 (input path)
 	(preprocess/stream asset input assets)))))
@@ -96,7 +96,7 @@
 (defmethod compile-asset ((asset preprocessed-asset) (output stream))
   (let ((assets (preprocess-asset asset)))
     (loop for a in assets
-       do (msg "P ~A" (asset-source-path a))
+       ;;do (msg "P ~A" (asset-source-path a))
        do (process-asset a output))))
 
 (defmethod compile-asset ((asset preprocessed-asset) (output pathname))

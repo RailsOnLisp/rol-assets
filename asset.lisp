@@ -79,7 +79,7 @@
 
 (defmethod compile-asset ((asset asset) (output stream))
   (let ((path (asset-source-path asset)))
-    (msg "CP ~A" path)
+    ;;(msg "CP ~A" path)
     (with-open-file (in path :element-type '(unsigned-byte 8))
       (copy-stream in output)))
   nil)
@@ -87,7 +87,7 @@
 (defmethod compile-asset ((asset asset) (output pathname))
   (ensure-directories-exist output)
   (let ((path (asset-source-path asset)))
-    (msg "CP ~A" path)
+    ;;(msg "CP ~A" path)
     (copy-files path output :replace t :update t))
   nil)
 
