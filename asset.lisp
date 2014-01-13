@@ -111,17 +111,20 @@
 (defmethod asset-class-extensions ((asset asset))
   (asset-class-extensions (class-of asset)))
 
-;;  Extension -> asset class
+;;  Extension -> asset classes
 
-(defun extension-asset-class (extension
-			      &optional (class (find-class 'asset)))
+(defun extension-asset-classes (extension
+				&optional (class (find-class 'asset)))
   (declare (type extension extension)
 	   (type class class))
   (when extension
-    (labels ((matching-asset-class (c)
-	       (if (find extension (asset-class-extensions c))
-		   c
-		   (some #'matching-asset-class
-			 (closer-mop:class-direct-subclasses c)))))
-      (or (matching-asset-class class)
-	  class))))
+    (labels ((add (classes a)
+	       (reduce #'add (closer-mop:class-direct-subclasses a)
+		       :initial-value (cons a classes)))
+	     (matching-class (a)
+	       (if (find extension (asset-class-extensions a))
+		   (add nil a)
+		   (some #'matching-class
+			 (closer-mop:class-direct-subclasses a)))))
+      (or (matching-class class)
+	  `(,class)))))

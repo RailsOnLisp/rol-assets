@@ -28,7 +28,7 @@
 
 (defpackage :lowh.triangle.assets
   (:nicknames :L>assets)
-  (:use :cl :alexandria :L>ext :L>files :L>uri)
+  (:use :cl :alexandria :L>ext :L>files :L>uri :str)
   (:export
    ;;  Config
    #:*debug*

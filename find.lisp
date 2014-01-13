@@ -113,22 +113,26 @@
   `(let (,name ,ext)
      (cl-ppcre:register-groups-bind (n e)
 	 ("^\\s*(.*?)(?:\\.([^./]+))?\\s*$" ,spec)
-       (setf ,name n ,ext (intern-extension e)))
+       (setf ,name n ,ext (when e (intern-extension e))))
      (let ((,name ,name) (,ext ,ext))
        ,@body)))
 
 (defun find-assets-from-spec (spec &optional class assets)
-  (let ((new-assets (if class
-			(find-assets class nil spec nil assets)
-			assets)))
-    (if (eq assets new-assets)
+  (labels ((assets-matching (class name ext)
+	     (if class
+		 (let ((new (find-assets class nil name
+					 (asset-class-extensions class)
+					 assets)))
+		   (unless (eq new assets)
+		     new))
+		 (when ext
+		   (some (lambda (class) (assets-matching class name ext))
+			 (extension-asset-classes ext))))))
+    (or (assets-matching class spec nil)
 	(with-asset-spec spec (name ext)
-	  (find-assets (or class (extension-asset-class ext))
-		       nil name ext assets)
-	  (when (eq assets new-assets)
-	    (find-assets (or class (extension-asset-class ext))
-			 nil name nil assets)))
-	new-assets)))
+	  (when ext
+	    (assets-matching class name ext)))
+	assets)))
 
 (defun find-assets-from-specs (specs &optional class assets)
   (reduce (lambda (assets spec)

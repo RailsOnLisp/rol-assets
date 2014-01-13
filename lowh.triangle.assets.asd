@@ -28,7 +28,8 @@
 	       "cl-json"
 	       "exec-js"
 	       "lowh.triangle.files"
-	       "lowh.triangle.uri")
+	       "lowh.triangle.uri"
+	       "str")
   :components
   ((:file "package")
    (:file "config"     :depends-on ("package"))
@@ -45,4 +46,5 @@
    (:file "preprocess" :depends-on ("find"))
    (:file "image"      :depends-on ("asset" "html"))
    (:file "css"        :depends-on ("preprocess" "html"))
+   (:file "less"       :depends-on ("css"))
    (:file "js"         :depends-on ("preprocess" "html"))))

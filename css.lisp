@@ -26,7 +26,7 @@
   '.css)
 
 (defmethod asset-class-extensions ((class (eql 'css-asset)))
-  '(.css .less))
+  '(.css))
 
 (defmethod asset-include ((output stream)
 			  (context (eql :html))
@@ -36,69 +36,6 @@
   (write-string (quote-html (asset-url asset)) output)
   (write-string "\" type=\"text/css\" />
 " output)
-  (values))
-
-;;  Compile
-
-(defmethod json:encode-json ((object pathname) &optional stream)
-  (json:encode-json (namestring object) stream))
-
-(defun less (src-path parser-options css-options &optional out)
-  (let* ((fmt "~
-var path = require('path'),
-    fs = require('fs'),
-    sys = require('util'),
-    os = require('os');
-var less = require('less');
-var src = ~A;
-var parser_opts = ~A;
-var css_opts = ~A;
-
-var print_error = function (e) {
-  less.writeError(e);
-  process.exit(2);
-}
-var print_tree = function (e, tree) {
-  if (e)
-    print_error(e);
-  try {
-    var css = tree.toCSS(css_opts);
-    process.stdout.write(css);
-  } catch (e) {
-    print_error(e);
-  }
-}
-var parse_data = function (e, data) {
-  if (e)
-    print_error(e);
-  try {
-    new(less.Parser)(parser_opts).parse(data, print_tree)
-  } catch (e) {
-    print_error(e);
-  }
-}
-try {
-  fs.readFile(path.resolve(process.cwd(), src), 'utf8', parse_data);
-} catch (e) {
-  print_error(e);
-}
-")
-	 (js (format nil fmt
-		     (json:encode-json-to-string src-path)
-		     (json:encode-json-plist-to-string parser-options)
-		     (json:encode-json-plist-to-string css-options))))
-    #+nil(format *error-output* "~%~A~%" js)
-    (exec-js:from-string js :safely nil :out out)))
-
-(defmethod process-asset ((asset css-asset)
-			  (output stream))
-  (let ((true-assets-dirs (cache-1 (eq *assets-dirs*)
-			    (mapcar #'truename (assets-dirs))))
-	(path (truename (asset-source-path asset))))
-    (less path
-	  (list :paths true-assets-dirs	:filename path)
-	  (list :yuicompress (not *debug*))
-	  output))
   (values))
 
 (defmethod include-asset ((asset css-asset)
