@@ -61,6 +61,8 @@
    #:find-assets-from-spec
    #:find-assets-from-specs
    #:locate-precompiled-assets
+   ;;  Cache
+   #:clear-asset-cache
    ;;  Rendering
    #:quote-html
    #:process-asset

@@ -140,8 +140,19 @@
 	  specs
 	  :initial-value assets))
 
+;;  Asset cache
+
+(defvar *asset-cache* (make-hash-table :test 'equal))
+
+(defun clear-asset-cache ()
+  (clrhash *asset-cache*))
+
+(defmacro asset-cache-get (key)
+  `(gethash ,key *asset-cache*))
+
 (defun find-asset (spec &optional class)
-  (first (find-assets-from-spec spec class)))
+  (or #1=(asset-cache-get `(find-asset ,spec ,class))
+      (setf #1# (first (find-assets-from-spec spec class)))))
 
 ;;  Now that we can find an asset from a string spec we can also
 ;;  add some sugar coating to asset methods.

@@ -32,7 +32,10 @@
 	       :type extension)
    (sources :initarg :sources
 	    :reader asset-sources
-	    :type list)))
+	    :type list)
+   (path :type string)
+   (source-path :type string)
+   (url :type string)))
 
 (defgeneric asset-ext (asset))
 (defgeneric asset-url (asset))
@@ -52,18 +55,26 @@
   (mime-type (asset-ext asset)))
 
 (defmethod asset-url ((asset asset))
-  (expand-uri nil *assets-url-template*
-	      :name (asset-name asset)
-	      :ext (subseq (string-downcase (asset-ext asset)) 1)))
+  (if (slot-boundp asset 'url)
+      #1=(slot-value asset 'url)
+      (setf #1# (expand-uri nil *assets-url-template*
+			    :name (asset-name asset)
+			    :ext (subseq (string-downcase (asset-ext asset))
+					 1)))))
 
 (defmethod asset-path ((asset asset))
-  (expand-uri nil *assets-path-template*
-	      :name (asset-name asset)
-	      :ext (subseq (string-downcase (asset-ext asset)) 1)))
+  (if (slot-boundp asset 'path)
+      #1=(slot-value asset 'path)
+      (setf #1# (expand-uri nil *assets-path-template*
+			    :name (asset-name asset)
+			    :ext (subseq (string-downcase (asset-ext asset))
+					 1)))))
 
 (defmethod asset-source-path ((asset asset))
-  (with-slots (name source-dir source-ext) asset
-    (str source-dir name source-ext)))
+  (if (slot-boundp asset 'source-path)
+      #1=(slot-value asset 'source-path)
+      (setf #1# (with-slots (name source-dir source-ext) asset
+		  (str source-dir name source-ext)))))
 
 (defmethod print-object ((asset asset) stream)
   (print-unreadable-object (asset stream :type t)
