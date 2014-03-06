@@ -29,6 +29,12 @@
       (gethash ext *mime-type/extension*)
       (call-next-method)))
 
+(defmethod mime-type ((pathname pathname))
+  (mime-type (intern-extension (pathname-type pathname))))
+
+(defmethod mime-type ((file file-stream))
+  (mime-type (pathname file)))
+
 (defmethod (setf mime-type) (value (ext symbol))
   (if (extension-p ext)
       (setf (gethash ext *mime-type/extension*) value)
