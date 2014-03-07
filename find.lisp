@@ -152,7 +152,11 @@
 
 (defun find-asset (spec &optional class)
   (or #1=(asset-cache-get `(find-asset ,spec ,class))
-      (setf #1# (first (find-assets-from-spec spec class)))))
+      (setf #1# (let ((ext (when-let ((type (pathname-type spec)))
+			     (intern-extension type)))
+		      (assets (find-assets-from-spec spec class)))
+		  (or (find ext assets :key #'asset-source-ext :test #'eq)
+		      (first assets))))))
 
 ;;  Now that we can find an asset from a string spec we can also
 ;;  add some sugar coating to asset methods.
