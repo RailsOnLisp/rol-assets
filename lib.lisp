@@ -54,5 +54,5 @@
     (force-output)))
 
 (defun debug-msg (fmt &rest args)
-  (when *debug*
+  (when (debug-p :assets)
     (apply #'msg fmt args)))

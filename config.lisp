@@ -20,8 +20,6 @@
 
 ;;  Config
 
-(defvar *debug* nil)
-
 (defvar *default-assets-dirs*
   '("lib/*/triangle/assets/*/"
     "lib/triangle/*/triangle/assets/*/"

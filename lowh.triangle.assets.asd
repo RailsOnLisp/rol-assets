@@ -23,6 +23,7 @@
   :version "0.1"
   :description "Asset pipeline"
   :depends-on ("alexandria"
+	       "cl-debug"
 	       "cl-fad"
 	       "closer-mop"
 	       "cl-json"

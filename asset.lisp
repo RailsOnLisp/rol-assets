@@ -30,9 +30,7 @@
    (source-ext :initarg :source-ext
 	       :reader asset-source-ext
 	       :type extension)
-   (sources :initarg :sources
-	    :reader asset-sources
-	    :type list)
+   (sources :type list)
    (path :type string)
    (source-path :type string)
    (url :type string)))
@@ -43,6 +41,8 @@
 (defgeneric asset-source-path (asset))
 (defgeneric asset-include (output context asset &key &allow-other-keys))
 
+(defgeneric asset-sources (asset))
+(defgeneric asset-sources% (asset))
 (defgeneric asset-write-date (asset))
 (defgeneric compile-asset (asset output))
 
@@ -81,12 +81,29 @@
     (ignore-errors (format stream "~S" (asset-path asset)))
     (ignore-errors (format stream " ~S" (asset-source-path asset)))))
 
-(defmethod slot-unbound (class (asset asset) (slot (eql 'sources)))
-  (setf (slot-value asset 'sources) (list asset)))
+(defmethod asset-write-date ((assets cons))
+  (loop for a in assets
+     maximize (file-write-date (asset-source-path a))))
+
+(defmethod asset-sources% ((asset asset))
+  (list asset))
+
+(defmethod asset-sources ((asset asset))
+  (flet ((miss ()
+	   (let ((sources (asset-sources% asset)))
+	     (setf (slot-value asset 'sources)
+		   (cons (asset-write-date sources) sources))
+	     sources)))
+    (if (slot-boundp asset 'sources)
+	(destructuring-bind (cached-date &rest cached-sources)
+	    (slot-value asset 'sources)
+	  (if (= cached-date (asset-write-date cached-sources))
+	      cached-sources
+	      (miss)))
+	(miss))))
 
 (defmethod asset-write-date ((asset asset))
-  (loop for a in (asset-sources asset)
-     maximize (file-write-date (asset-source-path a))))
+  (asset-write-date (asset-sources asset)))
 
 (defmethod compile-asset ((asset asset) (output stream))
   (let ((path (asset-source-path asset)))

@@ -53,7 +53,7 @@
 (defmethod process-asset ((asset js-asset)
 			  (output stream))
   (with-input-from-file/utf-8 (js (asset-source-path asset))
-    (if (or (find :js *debug*) (find :assets *debug*))
+    (if (debug-p (or :js :assets))
 	(copy-stream js output)
 	(jsmin js output)))
   (force-output output)

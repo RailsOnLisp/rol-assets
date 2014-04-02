@@ -75,10 +75,14 @@ try {
 (defclass less-asset (css-asset)
   ((less-imports :type list)))
 
+(defgeneric less-imports% (asset))
+(defgeneric less-imports (asset))
+(defgeneric less-sources (asset))
+
 (defmethod asset-class-extensions ((class (eql 'less-asset)))
   '(.less))
 
-(defun less-imports% (asset)
+(defmethod less-imports% ((asset less-asset))
   (let* ((head (cons nil nil))
 	 (tail head))
     (regex-lines "(?:^|\\b)@import\\s+\"([^\"]+)\"\\s*;"
@@ -93,8 +97,6 @@ try {
 					       (cons a nil)))))))
     (cdr head)))
 
-(defgeneric less-imports (asset))
-
 (defmethod less-imports ((asset less-asset))
   (let* ((source-path (pathname (asset-source-path asset)))
 	 (write-date (file-write-date source-path))
@@ -104,8 +106,6 @@ try {
 	(cdr imports)
 	(cdr (setf (slot-value asset 'less-imports)
 		   (cons write-date (less-imports% asset)))))))
-
-(defgeneric less-sources (asset))
 
 (defmethod less-sources ((asset less-asset))
   (let* ((head (cons nil nil))
@@ -153,6 +153,6 @@ try {
 	(path (truename (asset-source-path asset))))
     (less path
 	  (list :paths true-assets-dirs	:filename path)
-	  (list :yuicompress (not *debug*))
+	  (list :yuicompress (not (debug-p (or :css :less :assets))))
 	  output))
   (values))
