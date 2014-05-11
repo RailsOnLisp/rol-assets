@@ -47,17 +47,18 @@
   (let ((absolute-dir (truename dir))
 	(assets assets))
     (dolist (path (directory (str dir name ext)))
-      (let* ((name.ext (enough-namestring (truename path) absolute-dir))
-	     (name (if ext
-		       (subseq name.ext 0 (- (length name.ext)
-					     (length (string ext))))
-		       name.ext)))
-	(unless (find-in-assets type dir name ext assets)
-	  (push (make-instance type
-			       :name name
-			       :source-dir dir
-			       :source-ext ext)
-		assets))))
+      (unless (char= #\. (char (pathname-name path) 0))
+	(let* ((name.ext (enough-namestring (truename path) absolute-dir))
+	       (name (if ext
+			 (subseq name.ext 0 (- (length name.ext)
+					       (length (string ext))))
+			 name.ext)))
+	  (unless (find-in-assets type dir name ext assets)
+	    (push (make-instance type
+				 :name name
+				 :source-dir dir
+				 :source-ext ext)
+		  assets)))))
     assets))
 
 ;;    Loop through extensions
