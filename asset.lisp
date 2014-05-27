@@ -82,8 +82,11 @@
     (ignore-errors (format stream " ~S" (asset-source-path asset)))))
 
 (defmethod asset-write-date ((assets cons))
-  (loop for a in assets
-     maximize (file-write-date (asset-source-path a))))
+  (loop
+     for a in assets
+     for path = (asset-source-path a)
+     unless (probe-file path) do (return -1)
+     maximize (file-write-date path)))
 
 (defmethod asset-sources% ((asset asset))
   (list asset))
