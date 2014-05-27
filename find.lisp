@@ -46,7 +46,7 @@
 			assets)
   (let ((absolute-dir (truename dir))
 	(assets assets))
-    (dolist (path (directory (str dir name ext)))
+    (dolist (path (reverse (directory (str dir name ext))))
       (unless (char= #\. (char (pathname-name path) 0))
 	(let* ((name.ext (enough-namestring (truename path) absolute-dir))
 	       (name (if ext
