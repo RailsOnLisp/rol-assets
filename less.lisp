@@ -24,51 +24,13 @@
   (json:encode-json (namestring object) stream))
 
 (defun less (src-path parser-options css-options &optional out)
-  (let* ((fmt "~
-var path = require('path'),
-    fs = require('fs'),
-    sys = require('util'),
-    os = require('os');
-var less = require('less');
-var src = ~A;
-var parser_opts = ~A;
-var css_opts = ~A;
-
-var print_error = function (e) {
-  less.writeError(e);
-  process.exit(2);
-}
-var print_tree = function (e, tree) {
-  if (e)
-    print_error(e);
-  try {
-    var css = tree.toCSS(css_opts);
-    process.stdout.write(css);
-  } catch (e) {
-    print_error(e);
-  }
-}
-var parse_data = function (e, data) {
-  if (e)
-    print_error(e);
-  try {
-    new(less.Parser)(parser_opts).parse(data, print_tree)
-  } catch (e) {
-    print_error(e);
-  }
-}
-try {
-  fs.readFile(path.resolve(process.cwd(), src), 'utf8', parse_data);
-} catch (e) {
-  print_error(e);
-}
-")
-	 (js (format nil fmt
-		     (json:encode-json-to-string src-path)
-		     (json:encode-json-plist-to-string parser-options)
-		     (json:encode-json-plist-to-string css-options))))
-    #+nil(format *error-output* "~%~A~%" js)
-    (exec-js:from-string js :safely nil :out out)))
+  (let ((opt (json:make-object `((src . ,src-path)
+				 (parser . ,(plist-alist parser-options))
+				 (css . ,(plist-alist css-options)))
+			       nil)))
+    (with-input-from-string (in (json:encode-json-to-string opt))
+      (exec-js:from-file #P"lib/triangle/assets/less.js"
+			 :safely nil :in in :out out))))
 
 ;;  LESS
 
