@@ -25,10 +25,13 @@
 ;;  Preprocessing an asset gives a list of assets to compile.
 
 (defun preprocess/require (asset specs assets)
-  (reduce (lambda (assets asset)
-	    (preprocess/asset asset assets))
-	  (find-assets-from-specs specs (class-of asset))
-	  :initial-value assets))
+  (let ((found (find-assets-from-specs specs (class-of asset))))
+    (unless found
+      (error "Asset not found : ~S~&Required by ~S" specs asset))
+    (reduce (lambda (assets asset)
+	      (preprocess/asset asset assets))
+	    found
+	    :initial-value assets)))
 
 (defun preprocess/comment (asset comment assets)
   #+nil(debug-msg "Comment ~S" comment)
