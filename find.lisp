@@ -131,7 +131,9 @@
 			 (extension-asset-classes ext))))))
     (or (assets-matching class spec nil)
 	(with-asset-spec spec (name ext)
-	  (when ext
+	  (when (if class
+		    (find ext (asset-class-extensions class))
+		    ext)
 	    (assets-matching class name ext)))
 	assets)))
 
