@@ -16,6 +16,8 @@
 ;;  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ;;
 
+;;  FIXME bug on bare .css files ?
+
 (in-package :lowh.triangle.assets)
 
 ;;  CSS

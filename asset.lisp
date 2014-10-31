@@ -16,6 +16,8 @@
 ;;  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ;;
 
+;;  FIXME: bug on renamed or deleted asset file still in cache
+
 (in-package :lowh.triangle.assets)
 
 ;;  Asset class
