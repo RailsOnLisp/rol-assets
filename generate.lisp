@@ -31,7 +31,9 @@
 	(dir (enough-namestring
 	      (truename
 	       (merge-pathnames "../" (make-pathname :name nil :type nil
-						     :defaults path))))))
+                                                     :defaults path))))))
+    (when (zerop (length dir))
+      (setq dir "./"))
     (msg "~A" dir)
     (with-msg-indent (1)
       (load path)
@@ -40,5 +42,7 @@
 (defun generate ()
   (msg "Generate")
   (with-msg-indent (1)
+    (mapc #'generate/file (directory "triangle/assets.lisp"))
+    (mapc #'generate/file (directory "*/triangle/assets.lisp"))
     (mapc #'generate/file (directory "lib/triangle/*/triangle/assets.lisp"))
     (mapc #'generate/file (directory "lib/*/triangle/assets.lisp"))))
