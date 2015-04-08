@@ -96,7 +96,9 @@
 	  :initial-value assets))
 
 (defmethod find-assets (type (dir null) name ext assets)
-  (find-assets type (assets-dirs) name ext assets))
+  (let ((dir (assets-dirs)))
+    (when dir
+      (find-assets type dir name ext assets))))
 
 ;;    Resolve class
 
