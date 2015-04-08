@@ -16,7 +16,7 @@
 ;;  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ;;
 
-(in-package :lowh.triangle.assets)
+(in-package :RoL-assets)
 
 (defstruct (entity-table (:constructor make-entity-table (chars entities)))
   chars

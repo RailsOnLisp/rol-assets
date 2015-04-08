@@ -16,7 +16,7 @@
 ;;  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ;;
 
-(in-package :lowh.triangle.assets)
+(in-package :RoL-assets)
 
 ;;  Extensions package
 
@@ -24,13 +24,14 @@
   (let ((sym (intern (string-upcase (if (char= #\. (char name 0))
 					name
 					(concatenate 'string "." name)))
-		     :L>ext)))
-    (export sym :L>ext)
+		     :RoL-extensions)))
+    (export sym :RoL-extensions)
     sym))
 
 (defun extension-p (thing)
   (and (symbolp thing)
-       (eq #.(find-package :L>ext) (symbol-package thing))))
+       (eq #.(find-package :RoL-extensions)
+           (symbol-package thing))))
 
 (deftype extension ()
   `(and symbol (satisfies extension-p)))

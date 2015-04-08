@@ -18,17 +18,17 @@
 
 (in-package :cl-user)
 
-(defpackage :lowh.triangle.extensions
-  (:nicknames :L>ext)
+(defpackage :RoL-extensions
+  (:nicknames :RoL-ext :L>ext :lowh.triangle.extensions)
   #.(let (symbols)
-      (when (find-package :L>ext)
-	(do-external-symbols (s :L>ext)
+      (when (find-package :RoL-ext)
+	(do-external-symbols (s :RoL-ext)
 	  (push s symbols)))
       `(:export ,@symbols)))
 
-(defpackage :lowh.triangle.assets
-  (:nicknames :L>assets)
-  (:use :cl :debug :alexandria :L>ext :L>files :L>uri :str)
+(defpackage :RoL-assets
+  (:nicknames :L>assets :lowh.triangle.assets)
+  (:use :cl :debug :alexandria :RoL-ext :RoL-files :RoL-uri :str)
   (:export
    ;;  Config
    #:*assets-url-template*

@@ -1,7 +1,11 @@
 ;;
-;;  LowH Triangle Assets  -  Asset pipeline
+;;  RoL-assets  -  Asset pipeline
 ;;
-;;  Copyright 2012 Thomas de Grivel <thomas@lowh.net>
+;;  Copyright 2012-2015 Thomas de Grivel <thomas@lowh.net>
+;;
+;;  Permission to use, copy, modify, and distribute this software for any
+;;  purpose with or without fee is hereby granted, provided that the above
+;;  copyright notice and this permission notice appear in all copies.
 ;;
 ;;  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 ;;  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
@@ -12,13 +16,15 @@
 ;;  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ;;
 
-(defpackage :lowh.triangle.assets.system
-  (:use :cl :asdf))
+(in-package #:cl-user)
 
-(in-package :lowh.triangle.assets.system)
+(defpackage #:RoL-assets.system
+  (:use #:cl #:asdf))
 
-(asdf:defsystem :lowh.triangle.assets
-  :name "lowh.triangle.assets"
+(in-package #:RoL-assets.system)
+
+(asdf:defsystem :RoL-assets
+  :name "RoL-assets"
   :author "Thomas de Grivel <thomas@lowh.net>"
   :version "0.1"
   :description "Asset pipeline"
@@ -29,8 +35,8 @@
 	       "closer-mop"
 	       "cl-json"
 	       "exec-js"
-	       "lowh.triangle.files"
-	       "lowh.triangle.uri"
+	       "rol-files"
+	       "rol-uri"
 	       "str")
   :components
   ((:file "package")

@@ -18,7 +18,7 @@
 
 ;;  FIXME bug on bare .css files ?
 
-(in-package :lowh.triangle.assets)
+(in-package :RoL-assets)
 
 ;;  CSS
 
