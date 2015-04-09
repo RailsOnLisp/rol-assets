@@ -50,7 +50,10 @@
    #:preprocessed-asset
    #:css-asset
    #:js-asset
+   #:less-asset
    ;;  Observers
+   #:asset-name
+   #:asset-ext
    #:asset-path
    #:asset-url
    #:asset-sources
