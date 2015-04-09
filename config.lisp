@@ -21,8 +21,8 @@
 ;;  Config
 
 (defvar *default-assets-dirs*
-  '("lib/*/triangle/assets/*/"
-    "lib/triangle/*/triangle/assets/*/"
+  '("lib/*/rol/assets/*/"
+    "lib/rol/*/rol/assets/*/"
     "app/assets/*/"
     "vendor/assets/*/"
     "assets/*/"))

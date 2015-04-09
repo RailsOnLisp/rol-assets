@@ -29,7 +29,7 @@
 				 (css . ,(plist-alist css-options)))
 			       nil)))
     (with-input-from-string (in (json:encode-json-to-string opt))
-      (exec-js:from-file #P"lib/triangle/assets/less.js"
+      (exec-js:from-file #P"lib/rol/assets/less.js"
 			 :safely nil :in in :out out))))
 
 ;;  LESS
