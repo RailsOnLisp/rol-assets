@@ -32,6 +32,7 @@
                "cfg"
 	       "cl-debug"
 	       "cl-fad"
+               "cl-uglify-js"
 	       "closer-mop"
 	       "cl-json"
 	       "exec-js"

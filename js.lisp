@@ -40,6 +40,15 @@
 
 ;;  Compile
 
+(defun uglifyjs (in out)
+  (write-string
+   (uglify-js:ast-gen-code
+    (uglify-js:ast-mangle
+     (uglify-js:ast-squeeze
+      (parse-js:parse-js in)))
+    :beautify nil)
+   out))
+
 (defun jsmin (in out)
   (let ((err (make-string-output-stream)))
     (unwind-protect
@@ -55,4 +64,12 @@
   (with-input-from-file/utf-8 (js (asset-source-path asset))
     (copy-stream js output))
   (force-output output)
+  (values))
+
+(defmethod compile-asset ((asset js-asset) (output stream))
+  (with-temporary-file (tmp)
+    (call-next-method asset tmp)
+    (force-output tmp)
+    (file-position tmp 0)
+    (uglifyjs tmp output))
   (values))
