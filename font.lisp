@@ -23,4 +23,4 @@
 (defclass font-asset (asset) ())
 
 (defmethod asset-class-extensions ((class (eql 'font-asset)))
-  '(.eot .ttf .woff))
+  '(.eot .ttf .woff .woff2))
