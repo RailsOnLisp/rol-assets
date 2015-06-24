@@ -18,22 +18,18 @@
 
 (in-package :RoL-assets)
 
-;;  Precompile
+(defun digest-file (path)
+  (positional:to-string
+   (ironclad:octets-to-integer
+    (ironclad:digest-file :sha1 path))
+   positional:+b26+))
 
-(defun locate-precompiled-assets ()
-  (find-assets-from-specs *precompiled-assets*))
-
-(defun precompile ()
-  (msg "Precompile")
-  (with-msg-indent (1)
-    (force-output)
-    (dolist (asset (locate-precompiled-assets))
-      (let ((output-path (asset-path asset)))
-	(msg "~A" output-path)
-        (let ((pathname (pathname output-path)))
-          (with-msg-indent (1)
-            (compile-asset asset pathname))
-          (setq pathname (digest-asset asset pathname))
-          (msg "~A" pathname)
-          (when (setq pathname (gzip-asset asset pathname))
-            (msg "~A" pathname)))))))
+(defmethod digest-asset ((asset asset) (path pathname))
+  (setf (asset-digest asset) (digest-file path))
+  (let ((digest-path (asset-path asset)))
+    (sb-posix:link path digest-path)
+    (sb-posix:unlink path)
+    (sb-posix:symlink (make-pathname :name (pathname-name digest-path)
+                                     :type (pathname-type digest-path))
+                      path)
+    digest-path))

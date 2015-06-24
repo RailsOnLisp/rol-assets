@@ -54,6 +54,7 @@
    ;;  Observers
    #:asset-name
    #:asset-ext
+   #:asset-digest
    #:asset-path
    #:asset-url
    #:asset-sources

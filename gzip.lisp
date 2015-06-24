@@ -18,22 +18,19 @@
 
 (in-package :RoL-assets)
 
-;;  Precompile
+(defvar *gzipped-extensions* '(.css .js .svg))
 
-(defun locate-precompiled-assets ()
-  (find-assets-from-specs *precompiled-assets*))
+(defun gzip (input &optional (output (str input ".gz")))
+  (with-temporary-file (tmp :element-type '(unsigned-byte 8)
+                            :prefix output)
+    (external-program:run "gzip" (list "-c")
+                          :input input
+                          :output tmp)
+    (sb-posix:link tmp output)
+    output))
 
-(defun precompile ()
-  (msg "Precompile")
-  (with-msg-indent (1)
-    (force-output)
-    (dolist (asset (locate-precompiled-assets))
-      (let ((output-path (asset-path asset)))
-	(msg "~A" output-path)
-        (let ((pathname (pathname output-path)))
-          (with-msg-indent (1)
-            (compile-asset asset pathname))
-          (setq pathname (digest-asset asset pathname))
-          (msg "~A" pathname)
-          (when (setq pathname (gzip-asset asset pathname))
-            (msg "~A" pathname)))))))
+(defgeneric gzip-asset (asset path))
+
+(defmethod gzip-asset ((asset asset) path)
+  (when (find (asset-ext asset) *gzipped-extensions* :test #'eq)
+    (gzip path)))

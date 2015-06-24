@@ -35,7 +35,10 @@
    (sources :type list)
    (path :type string)
    (source-path :type string)
-   (url :type string)))
+   (url :type string)
+   (digest :type string
+           :initform nil
+           :accessor asset-digest)))
 
 (defgeneric asset-ext (asset))
 (defgeneric asset-url (asset))
@@ -47,30 +50,44 @@
 (defgeneric asset-sources% (asset))
 (defgeneric asset-write-date (asset))
 (defgeneric compile-asset (asset output))
+(defgeneric digest-asset (asset path))
 
 ;;  Base implementation
 
 (defmethod asset-ext ((asset asset))
   (asset-source-ext asset))
 
+(defmethod asset-digest ((asset asset))
+  (or (slot-value asset 'digest)
+      (let ((asset-path (expand-uri nil *assets-path-template*
+                                    :name (asset-name asset)
+                                    :ext (subseq (string-downcase (asset-ext asset))
+                                                 1))))
+        (when-let ((link (readlink asset-path)))
+          (cl-ppcre:register-groups-bind (name digest ext)
+              ("([^/]+)[.]([^./]+)([.][^./]+)$" link)
+            (when (and (string= name (asset-name asset))
+                       (string-equal ext (asset-ext asset)))
+              (setf (asset-digest asset) digest)
+              (slot-makunbound asset 'url)
+              (slot-makunbound asset 'path)
+              digest))))))
+
 (defmethod mime-type ((asset asset))
   (mime-type (asset-ext asset)))
 
 (defmethod asset-url ((asset asset))
-  (if (slot-boundp asset 'url)
-      #1=(slot-value asset 'url)
-      (setf #1# (expand-uri nil *assets-url-template*
-			    :name (asset-name asset)
-			    :ext (subseq (string-downcase (asset-ext asset))
-					 1)))))
+  (expand-uri nil *assets-url-template*
+              :name (asset-name asset)
+              :digest (asset-digest asset)
+              :ext (subseq (string-downcase (asset-ext asset))
+                           1)))
 
 (defmethod asset-path ((asset asset))
-  (if (slot-boundp asset 'path)
-      #1=(slot-value asset 'path)
-      (setf #1# (expand-uri nil *assets-path-template*
-			    :name (asset-name asset)
-			    :ext (subseq (string-downcase (asset-ext asset))
-					 1)))))
+  (expand-uri nil *assets-path-template*
+              :name (asset-name asset)
+              :digest (asset-digest asset)
+              :ext (subseq (string-downcase (asset-ext asset)) 1)))
 
 (defmethod asset-source-path ((asset asset))
   (if (slot-boundp asset 'source-path)

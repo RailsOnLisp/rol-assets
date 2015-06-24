@@ -44,8 +44,8 @@
 (defparameter *precompiled-assets*
   *default-precompiled-assets*)
 
-(defvar *assets-url-template* (uri-template "/assets{/name}{.ext}"))
-(defvar *assets-path-template* (uri-template "public/assets{/name}{.ext}"))
+(defvar *assets-url-template* (uri-template "/assets{/name}{.digest,ext}"))
+(defvar *assets-path-template* (uri-template "public/assets{/name}{.digest,ext}"))
 
 ;;  Config stanzas
 

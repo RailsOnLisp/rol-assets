@@ -30,12 +30,16 @@
   :description "Asset pipeline"
   :depends-on ("alexandria"
                "cfg"
+               "cl-base64"
 	       "cl-debug"
 	       "cl-fad"
                "cl-uglify-js"
 	       "closer-mop"
 	       "cl-json"
 	       "exec-js"
+               "external-program"
+               "ironclad"
+               "positional"
 	       "rol-files"
 	       "rol-uri"
 	       "str")
@@ -48,12 +52,14 @@
    (:file "mime-types" :depends-on ("extensions"))
    (:file "generate"   :depends-on ("lib"))
    (:file "asset"      :depends-on ("config" "mime-types" "lib"))
+   (:file "digest"     :depends-on ("asset"))
    (:file "find"       :depends-on ("asset"))
    (:file "font"       :depends-on ("asset"))
+   (:file "gzip"       :depends-on ("asset"))
    (:file "json"       :depends-on ("asset"))
-   (:file "precompile" :depends-on ("find"))
    (:file "preprocess" :depends-on ("find"))
    (:file "image"      :depends-on ("asset" "html"))
    (:file "css"        :depends-on ("preprocess" "html"))
    (:file "less"       :depends-on ("css"))
-   (:file "js"         :depends-on ("preprocess" "html"))))
+   (:file "js"         :depends-on ("preprocess" "html"))
+   (:file "precompile" :depends-on ("find" "digest" "gzip"))))
