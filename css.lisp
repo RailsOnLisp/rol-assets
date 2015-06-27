@@ -43,3 +43,17 @@
 (defmethod include-asset ((asset css-asset)
 			  (output stream))
   (format output "@import url('~A');~%" (asset-url asset)))
+
+(defmethod compile-asset :around ((asset css-asset) (output pathname))
+  (with-temporary-file (tmp)
+    (compile-asset asset tmp)
+    (force-output tmp)
+    (file-position tmp 0)
+    (regex-lines "\\burl\\s*\\([\"']?asset:([^\"'?#)]*)([^\"')]*)[\"']?\\)" tmp
+                 :replace (lambda (match spec rest)
+                            (declare (ignore match))
+                            (let ((asset (find-asset spec)))
+                              (unless (asset-digest asset)
+                                (compile-asset asset (pathname (asset-path asset))))
+                              (str "url('" (asset-url asset) rest "')")))
+                 :output output)))
