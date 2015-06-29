@@ -40,6 +40,7 @@
                "external-program"
                "ironclad"
                "positional"
+               "re"
 	       "rol-files"
 	       "rol-uri"
 	       "str")
