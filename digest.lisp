@@ -19,18 +19,10 @@
 (in-package :RoL-assets)
 
 (defvar *digest* :sha1)
-(defvar *digest-base* positional:+b64uri+)
-
-(defun digest-length ()
-  (values (ceiling (log (expt 2 (* 8 (ironclad:digest-length *digest*)))
-                        (positional:base *digest-base*)))))
 
 (defun digest-file (path)
-  (positional:to-string
-   (ironclad:octets-to-integer
-    (ironclad:digest-file *digest* path))
-   *digest-base*
-   :padding (digest-length)))
+  (let ((n (ironclad:octets-to-integer (ironclad:digest-file *digest* path))))
+    (cl-base64:integer-to-base64-string n :uri t)))
 
 (defmethod digest-asset ((asset asset) (path pathname))
   (setf (asset-digest asset) (digest-file path))
