@@ -26,6 +26,8 @@
     (external-program:run "gzip" (list "-c")
                           :input input
                           :output tmp)
+    (when (probe-file output)
+      (sb-posix:unlink output))
     (sb-posix:link tmp output)
     output))
 
