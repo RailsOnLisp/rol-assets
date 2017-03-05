@@ -23,15 +23,28 @@
 (defmethod json:encode-json ((object pathname) &optional stream)
   (json:encode-json (namestring object) stream))
 
-(defun less (src-path parser-options css-options &optional out)
+(defun less-js (src-path options &optional out)
   (let ((opt (json:make-object `((src . ,src-path)
-				 (parser . ,(plist-alist parser-options))
-				 (css . ,(plist-alist css-options)))
+				 (parser . ,(plist-alist options)))
 			       nil)))
     (with-input-from-string (in (json:encode-json-to-string opt))
       (exec-js:from-file #P"lib/rol/assets/less.js"
 			 :safely nil :in in :out out))))
 
+(defun less-path (path)
+  (format nil "--include-path=~{~A~^:~}" path))
+
+(defun less (src-path &key clean path out)
+  (let ((args ()))
+    (when out
+      (push out args))
+    (push src-path args)
+    (when clean
+      (push "--clean-css" args))
+    (when path
+      (push (less-path path) args))
+      (external-program:run "lessc" args :output out)))
+			
 ;;  LESS
 
 (defclass less-asset (css-asset)
@@ -114,7 +127,7 @@
 			    (mapcar #'truename (assets-dirs))))
 	(path (truename (asset-source-path asset))))
     (less path
-	  (list :paths true-assets-dirs	:filename path)
-	  (list :yuicompress (not (debug-p (or :css :less :assets))))
-	  output))
+	  :clean (not (debug-p (or :css :less :assets)))
+	  :path true-assets-dirs
+	  :out output))
   (values))
