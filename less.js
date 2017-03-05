@@ -10,17 +10,15 @@ var print_error = function (e) {
 try {
   var opt = JSON.parse(rw.readFileSync('/dev/stdin', 'utf8'));
 
-  var print_tree = function (e, tree) {
-    if (e)
-      print_error(e);
-    var css = tree.toCSS(opt.css);
-    rw.writeFileSync('/dev/stdout', css, 'utf8');
-  };
-
   var parse_data = function (e, data) {
     if (e)
       print_error(e);
-    new(less.Parser)(opt.parser).parse(data, print_tree);
+    else {
+      less.render(data, opt.parser, function (e, output) {
+	console.log(output);    
+	rw.writeFileSync('/dev/stdout', output.css, 'utf8');
+      });
+    }
   };
 
   rw.readFile(path.resolve(process.cwd(), opt.src), 'utf8', parse_data);
