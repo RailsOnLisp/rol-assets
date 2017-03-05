@@ -24,7 +24,8 @@
       (when (find-package :RoL-ext)
 	(do-external-symbols (s :RoL-ext)
 	  (push s symbols)))
-      `(:export ,@symbols)))
+      `(:export ,@symbols
+		#:.woff #:.woff2)))
 
 (defpackage :RoL-assets
   (:nicknames :L>assets :lowh.triangle.assets)

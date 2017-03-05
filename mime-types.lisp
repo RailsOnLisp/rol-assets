@@ -58,6 +58,7 @@
 	     t))
 	 '(#P"mime.types"
 	   #P"conf/mime.types"
+	   #P"/etc/mime.types"
 	   #P"/etc/nginx/mime.types"
 	   #P"/var/www/conf/mime.types"
 	   #P"/etc/apache/mime.types"))
