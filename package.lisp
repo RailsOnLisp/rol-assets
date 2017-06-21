@@ -18,14 +18,18 @@
 
 (in-package :cl-user)
 
-(defpackage :RoL-extensions
-  (:nicknames :RoL-ext :L>ext :lowh.triangle.extensions)
-  #.(let (symbols)
-      (when (find-package :RoL-ext)
-	(do-external-symbols (s :RoL-ext)
-	  (push s symbols)))
-      `(:export ,@symbols
-		#:.woff #:.woff2)))
+(defmacro defpackage-rol-extensions ()
+  (let (symbols)
+    (when (find-package :RoL-extensions)
+      (do-external-symbols (s :RoL-extensions)
+	(push s symbols)))
+    `(defpackage :RoL-extensions
+       (:nicknames :RoL-ext :L>ext :lowh.triangle.extensions)
+       (:export ,@symbols
+		#:.woff #:.woff2))))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defpackage-rol-extensions))
 
 (defpackage :RoL-assets
   (:nicknames :L>assets :lowh.triangle.assets)
