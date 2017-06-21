@@ -22,11 +22,11 @@
   (let (symbols)
     (when (find-package :RoL-extensions)
       (do-external-symbols (s :RoL-extensions)
-	(push s symbols)))
+        (push s symbols)))
     `(defpackage :RoL-extensions
        (:nicknames :RoL-ext :L>ext :lowh.triangle.extensions)
        (:export ,@symbols
-		#:.woff #:.woff2))))
+                #:.woff #:.woff2))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defpackage-rol-extensions))

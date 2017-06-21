@@ -29,7 +29,7 @@
     (force-output)
     (dolist (asset (locate-precompiled-assets))
       (let ((output-path (asset-path asset)))
-	(msg "~A" output-path)
+        (msg "~A" output-path)
         (let ((pathname (pathname output-path)))
           (with-msg-indent (1)
             (compile-asset asset pathname))

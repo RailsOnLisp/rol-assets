@@ -15,8 +15,8 @@ try {
       print_error(e);
     else {
       less.render(data, opt.parser, function (e, output) {
-	console.log(output);    
-	rw.writeFileSync('/dev/stdout', output.css, 'utf8');
+        console.log(output);    
+        rw.writeFileSync('/dev/stdout', output.css, 'utf8');
       });
     }
   };

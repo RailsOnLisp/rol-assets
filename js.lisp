@@ -29,9 +29,9 @@
   '(.js))
 
 (defmethod asset-include ((output stream)
-			  (context (eql :html))
-			  (asset js-asset)
-			  &key &allow-other-keys)
+                          (context (eql :html))
+                          (asset js-asset)
+                          &key &allow-other-keys)
   (write-string "<script src=\"" output)
   (write-string (quote-html (asset-url asset)) output)
   (write-string "\" type=\"text/javascript\"></script>
@@ -52,15 +52,15 @@
 (defun jsmin (in out)
   (let ((err (make-string-output-stream)))
     (unwind-protect
-	 (sb-ext:run-program "jsmin" '()
-			     :input in
-			     :output out
-			     :error err
-			     :search t)
+         (sb-ext:run-program "jsmin" '()
+                             :input in
+                             :output out
+                             :error err
+                             :search t)
       (close err))))
 
 (defmethod process-asset ((asset js-asset)
-			  (output stream))
+                          (output stream))
   (with-input-from-file/utf-8 (js (asset-source-path asset))
     (copy-stream js output))
   (force-output output)

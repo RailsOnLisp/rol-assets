@@ -24,14 +24,14 @@
 
 (defclass asset ()
   ((name :initarg :name
-	 :reader asset-name
-	 :type string)
+         :reader asset-name
+         :type string)
    (source-dir :initarg :source-dir
-	       :accessor asset-source-dir
-	       :type string)
+               :accessor asset-source-dir
+               :type string)
    (source-ext :initarg :source-ext
-	       :reader asset-source-ext
-	       :type extension)
+               :reader asset-source-ext
+               :type extension)
    (sources :type list)
    (path :type string)
    (source-path :type string)
@@ -93,7 +93,7 @@
   (if (slot-boundp asset 'source-path)
       #1=(slot-value asset 'source-path)
       (setf #1# (with-slots (name source-dir source-ext) asset
-		  (str source-dir name source-ext)))))
+                  (str source-dir name source-ext)))))
 
 (defmethod print-object ((asset asset) stream)
   (print-unreadable-object (asset stream :type t)
@@ -112,17 +112,17 @@
 
 (defmethod asset-sources ((asset asset))
   (flet ((miss ()
-	   (let ((sources (asset-sources% asset)))
-	     (setf (slot-value asset 'sources)
-		   (cons (asset-write-date sources) sources))
-	     sources)))
+           (let ((sources (asset-sources% asset)))
+             (setf (slot-value asset 'sources)
+                   (cons (asset-write-date sources) sources))
+             sources)))
     (if (slot-boundp asset 'sources)
-	(destructuring-bind (cached-date &rest cached-sources)
-	    (slot-value asset 'sources)
-	  (if (= cached-date (asset-write-date cached-sources))
-	      cached-sources
-	      (miss)))
-	(miss))))
+        (destructuring-bind (cached-date &rest cached-sources)
+            (slot-value asset 'sources)
+          (if (= cached-date (asset-write-date cached-sources))
+              cached-sources
+              (miss)))
+        (miss))))
 
 (defmethod asset-write-date ((asset asset))
   (asset-write-date (asset-sources asset)))
@@ -142,9 +142,9 @@
   nil)
 
 (defmethod asset-include ((output null)
-			  context
-			  asset
-			  &rest args &key &allow-other-keys)
+                          context
+                          asset
+                          &rest args &key &allow-other-keys)
   (with-output-to-string (stream)
     (apply #'asset-include stream context asset args)))
 
@@ -164,17 +164,17 @@
 ;;  Extension -> asset classes
 
 (defun extension-asset-classes (extension
-				&optional (class (find-class 'asset)))
+                                &optional (class (find-class 'asset)))
   (declare (type extension extension)
-	   (type class class))
+           (type class class))
   (when extension
     (labels ((add (classes a)
-	       (reduce #'add (closer-mop:class-direct-subclasses a)
-		       :initial-value (cons a classes)))
-	     (matching-class (a)
-	       (if (find extension (asset-class-extensions a))
-		   (add nil a)
-		   (some #'matching-class
-			 (closer-mop:class-direct-subclasses a)))))
+               (reduce #'add (closer-mop:class-direct-subclasses a)
+                       :initial-value (cons a classes)))
+             (matching-class (a)
+               (if (find extension (asset-class-extensions a))
+                   (add nil a)
+                   (some #'matching-class
+                         (closer-mop:class-direct-subclasses a)))))
       (or (matching-class class)
-	  `(,class)))))
+          `(,class)))))

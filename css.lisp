@@ -31,9 +31,9 @@
   '(.css))
 
 (defmethod asset-include ((output stream)
-			  (context (eql :html))
-			  (asset css-asset)
-			  &key &allow-other-keys)
+                          (context (eql :html))
+                          (asset css-asset)
+                          &key &allow-other-keys)
   (write-string "<link rel=\"stylesheet\" href=\"" output)
   (write-string (quote-html (asset-url asset)) output)
   (write-string "\" type=\"text/css\" />
@@ -41,7 +41,7 @@
   (values))
 
 (defmethod include-asset ((asset css-asset)
-			  (output stream))
+                          (output stream))
   (format output "@import url('~A');~%" (asset-url asset)))
 
 (defmethod process-asset :around ((asset css-asset) (output stream))

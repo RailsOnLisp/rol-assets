@@ -31,18 +31,18 @@
   :depends-on ("alexandria"
                "cfg"
                "cl-base64"
-	       "cl-debug"
-	       "cl-fad"
+               "cl-debug"
+               "cl-fad"
                "cl-uglify-js"
-	       "closer-mop"
-	       "cl-json"
-	       "exec-js"
+               "closer-mop"
+               "cl-json"
+               "exec-js"
                "external-program"
                "ironclad"
                "re"
-	       "rol-files"
-	       "rol-uri"
-	       "str")
+               "rol-files"
+               "rol-uri"
+               "str")
   :components
   ((:file "package")
    (:file "config"     :depends-on ("package"))

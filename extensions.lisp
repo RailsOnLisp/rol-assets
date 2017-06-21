@@ -22,9 +22,9 @@
 
 (defun intern-extension (name)
   (let ((sym (intern (string-upcase (if (char= #\. (char name 0))
-					name
-					(concatenate 'string "." name)))
-		     :RoL-extensions)))
+                                        name
+                                        (concatenate 'string "." name)))
+                     :RoL-extensions)))
     (export sym :RoL-extensions)
     sym))
 

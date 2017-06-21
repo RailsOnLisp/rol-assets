@@ -30,11 +30,11 @@
     (defmacro cache-1 ((test key) &body body)
       "Cache one value of BODY. TEST identifies KEY is cached."
       (let ((cache (gensym "CACHE-")))
-	`(let ((,cache (load-time-value (cons ',cache-nil nil))))
-	   (if (,test (car ,cache) ,key)
-	       (cdr ,cache)
-	       (setf (car ,cache) ,key
-		     (cdr ,cache) (progn ,@body))))))))
+        `(let ((,cache (load-time-value (cons ',cache-nil nil))))
+           (if (,test (car ,cache) ,key)
+               (cdr ,cache)
+               (setf (car ,cache) ,key
+                     (cdr ,cache) (progn ,@body))))))))
 
 ;;  Log messages
 

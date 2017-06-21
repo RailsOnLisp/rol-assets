@@ -51,9 +51,9 @@
 
 (defun assets-dir (pathspec)
   (let* ((namestring (enough-namestring pathspec))
-	 (path (if (char= #\/ (last-elt namestring))
-		   namestring
-		   (str namestring "/"))))
+         (path (if (char= #\/ (last-elt namestring))
+                   namestring
+                   (str namestring "/"))))
     (pushnew path *assets-dirs* :test #'string=)))
 
 (defun precompiled-asset (asset-name)

@@ -30,15 +30,15 @@
 (defun coffeescript (in out)
   (let ((err (make-string-output-stream)))
     (unwind-protect
-	 (sb-ext:run-program "coffee -cs" '()
-			     :input in
-			     :output out
-			     :error err
-			     :search t)
+         (sb-ext:run-program "coffee -cs" '()
+                             :input in
+                             :output out
+                             :error err
+                             :search t)
       (close err))))
 
 (defmethod process-asset ((asset coffeescript-asset)
-			  (output stream))
+                          (output stream))
   (with-input-from-file/utf-8 (in (asset-source-path asset))
     (coffeescript in output))
   (force-output output)

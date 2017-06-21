@@ -26,9 +26,9 @@
   '(.gif .ico .jpeg .jpg .png .svg .svgz .wbmp))
 
 (defmethod asset-include ((output stream)
-			  (context (eql :html))
-			  (asset image-asset)
-			  &key alt &allow-other-keys)
+                          (context (eql :html))
+                          (asset image-asset)
+                          &key alt &allow-other-keys)
   (write-string "<img src=\"" output)
   (write-string (quote-html (asset-url asset)) output)
   (write-string "\" alt=\"" output)

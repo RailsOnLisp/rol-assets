@@ -28,9 +28,9 @@
 
 (defun generate/file (path)
   (let (*generator*
-	(dir (enough-namestring
-	      (truename
-	       (merge-pathnames "../" (make-pathname :name nil :type nil
+        (dir (enough-namestring
+              (truename
+               (merge-pathnames "../" (make-pathname :name nil :type nil
                                                      :defaults path))))))
     (when (zerop (length dir))
       (setq dir "./"))

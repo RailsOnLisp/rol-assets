@@ -44,21 +44,21 @@
 
 (defun read-mime.types (input)
   (regex-lines "^\\s*([a-zA-Z0-9_.+-]+/[-a-zA-Z0-9_.+]+)\\s+([\\sa-zA-Z0-9]+)"
-	       input
-	       :match (lambda (match type extensions)
-			(declare (ignorable match))
-			(setq type (intern (string-upcase type) :keyword))
-			(dolist (ext (cl-ppcre:split "\\s+" extensions))
-			  (unless (emptyp ext)
-			    (setf (mime-type (intern-extension ext)) type))))))
+               input
+               :match (lambda (match type extensions)
+                        (declare (ignorable match))
+                        (setq type (intern (string-upcase type) :keyword))
+                        (dolist (ext (cl-ppcre:split "\\s+" extensions))
+                          (unless (emptyp ext)
+                            (setf (mime-type (intern-extension ext)) type))))))
 
 (find-if (lambda (path)
-	   (when (probe-file path)
-	     (read-mime.types path)
-	     t))
-	 '(#P"mime.types"
-	   #P"conf/mime.types"
-	   #P"/etc/mime.types"
-	   #P"/etc/nginx/mime.types"
-	   #P"/var/www/conf/mime.types"
-	   #P"/etc/apache/mime.types"))
+           (when (probe-file path)
+             (read-mime.types path)
+             t))
+         '(#P"mime.types"
+           #P"conf/mime.types"
+           #P"/etc/mime.types"
+           #P"/etc/nginx/mime.types"
+           #P"/var/www/conf/mime.types"
+           #P"/etc/apache/mime.types"))
