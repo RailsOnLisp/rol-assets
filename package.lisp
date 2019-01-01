@@ -18,21 +18,21 @@
 
 (in-package :cl-user)
 
-(defmacro defpackage-rol-extensions ()
-  (let (symbols)
-    (when (find-package :RoL-extensions)
-      (do-external-symbols (s :RoL-extensions)
-        (push s symbols)))
-    `(defpackage :RoL-extensions
-       (:nicknames :RoL-ext :L>ext :lowh.triangle.extensions)
-       (:export ,@symbols
-                #:.woff #:.woff2))))
-
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defpackage-rol-extensions))
+  (unless (find-package :RoL-extensions)
+    (defpackage :RoL-extensions
+      (:nicknames :RoL-ext)
+      (:export #:.css
+               #:.eot
+               #:.jpeg
+               #:.jpg
+               #:.js
+               #:.png
+               #:.svg
+               #:.ttf
+               #:.woff))))
 
 (defpackage :RoL-assets
-  (:nicknames :L>assets :lowh.triangle.assets)
   (:use :cl :debug :alexandria :RoL-ext :RoL-files :RoL-uri :str)
   (:export
    ;;  Config
