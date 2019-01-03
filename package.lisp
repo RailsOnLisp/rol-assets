@@ -24,13 +24,15 @@
       (:nicknames :RoL-ext)
       (:export #:.css
                #:.eot
+               #:.html
                #:.jpeg
                #:.jpg
                #:.js
                #:.png
                #:.svg
                #:.ttf
-               #:.woff))))
+               #:.woff
+               #:.woff2))))
 
 (defpackage :RoL-assets
   (:use :cl :debug :alexandria :RoL-ext :RoL-files :RoL-uri :str)

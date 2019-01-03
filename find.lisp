@@ -46,7 +46,7 @@
                         assets)
   (let ((absolute-dir (truename dir))
         (assets assets))
-    (dolist (path (reverse (directory (str dir name ext))))
+    (dolist (path (reverse (directory (str dir name (string-downcase ext)))))
       (unless (char= #\. (char (pathname-name path) 0))
         (let* ((name.ext (enough-namestring (truename path) absolute-dir))
                (name (if ext
@@ -78,7 +78,7 @@
                         (dir string)
                         (name string)
                         (ext null)
-                        assets)
+                        (assets list))
   (when (setq ext (asset-class-extensions type))
     (find-assets type dir name ext assets)))
 
@@ -88,7 +88,7 @@
                         (directories cons)
                         (name string)
                         ext
-                        assets)
+                        (assets list))
   (reduce (lambda (assets dir)
             (declare (type string dir))
             (find-assets type dir name ext assets))
@@ -96,9 +96,9 @@
           :initial-value assets))
 
 (defmethod find-assets (type (dir null) name ext assets)
-  (let ((dir (assets-dirs)))
-    (when dir
-      (find-assets type dir name ext assets))))
+  (let ((dirs (assets-dirs)))
+    (when dirs
+      (find-assets type dirs name ext assets))))
 
 ;;    Resolve class
 
@@ -123,11 +123,9 @@
 (defun find-assets-from-spec (spec &optional class assets)
   (labels ((assets-matching (class name ext)
              (if class
-                 (let ((new (find-assets class nil name
-                                         (asset-class-extensions class)
-                                         assets)))
-                   (unless (eq new assets)
-                     new))
+                 (find-assets class nil name
+                              (asset-class-extensions class)
+                              assets)
                  (when ext
                    (some (lambda (class) (assets-matching class name ext))
                          (extension-asset-classes ext))))))

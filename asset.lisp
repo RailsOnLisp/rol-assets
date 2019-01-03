@@ -93,7 +93,8 @@
   (if (slot-boundp asset 'source-path)
       #1=(slot-value asset 'source-path)
       (setf #1# (with-slots (name source-dir source-ext) asset
-                  (str source-dir name source-ext)))))
+                  (str source-dir name
+                       (string-downcase source-ext))))))
 
 (defmethod print-object ((asset asset) stream)
   (print-unreadable-object (asset stream :type t)
@@ -138,7 +139,7 @@
   (ensure-directories-exist output)
   (let ((path (asset-source-path asset)))
     ;;(msg "CP ~A" path)
-    (copy-files path output :replace t :update t))
+    (cl-fad:copy-file path output :overwrite t))
   nil)
 
 (defmethod asset-include ((output null)
