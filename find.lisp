@@ -53,12 +53,13 @@
                          (subseq name.ext 0 (- (length name.ext)
                                                (length (string ext))))
                          name.ext)))
-          (unless (find-in-assets type dir name ext assets)
-            (push (make-instance type
-                                 :name name
-                                 :source-dir dir
-                                 :source-ext ext)
-                  assets)))))
+          (when name
+            (unless (find-in-assets type dir name ext assets)
+              (push (make-instance type
+                                   :name name
+                                   :source-dir dir
+                                   :source-ext ext)
+                    assets))))))
     assets))
 
 ;;    Loop through extensions

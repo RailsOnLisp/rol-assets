@@ -36,7 +36,7 @@
    (path :type string)
    (source-path :type string)
    (url :type string)
-   (digest :type string
+   (digest :type (or null string)
            :initform nil
            :accessor asset-digest)))
 

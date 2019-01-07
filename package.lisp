@@ -28,6 +28,7 @@
                #:.jpeg
                #:.jpg
                #:.js
+               #:.less
                #:.png
                #:.svg
                #:.ttf
