@@ -52,7 +52,7 @@
         (let* ((name.ext (enough-namestring (truename path) absolute-dir))
                (name (if ext
                          (subseq name.ext 0 (- (length name.ext)
-                                               (length (string ext))))
+                                               (length (symbol-name ext))))
                          name.ext)))
           (when name
             (unless (find-in-assets type dir name ext assets)
