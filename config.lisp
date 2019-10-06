@@ -21,11 +21,10 @@
 ;;  Config
 
 (defvar *default-assets-dirs*
-  '("lib/*/rol/assets/*/"
-    "lib/rol/*/rol/assets/*/"
-    "app/assets/*/"
+  '("app/assets/*/"
     "vendor/assets/*/"
-    "assets/*/"))
+    "assets/*/"
+    "node_modules/**/"))
 
 (defparameter *assets-dirs*
   *default-assets-dirs*)
